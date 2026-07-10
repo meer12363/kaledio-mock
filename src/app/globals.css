@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* Brand — Kaledio blue */
+  --color-brand-50: #eef5fc;
+  --color-brand-100: #d9e9f8;
+  --color-brand-200: #b3d3f1;
+  --color-brand-300: #7fb4e6;
+  --color-brand-400: #4292d9;
+  --color-brand-500: #1878d1;
+  --color-brand-600: #0b66c3;
+  --color-brand-700: #08519d;
+  --color-brand-800: #0a4076;
+  --color-brand-900: #0c3157;
+
+  /* Ink — text scale */
+  --color-ink-900: #10161c;
+  --color-ink-700: #2c3844;
+  --color-ink-600: #4a5560;
+  --color-ink-500: #5f6c78;
+  --color-ink-400: #8794a1;
+  --color-ink-300: #aeb9c4;
+
+  /* Surfaces */
+  --color-paper: #ffffff;
+  --color-canvas: #f5f7f9;
+  --color-line: #e4e9ee;
+  --color-line-strong: #d3dae1;
+
+  /* Signals */
+  --color-go: #0f7b4d;
+  --color-go-soft: #e5f4ec;
+  --color-warn: #b45309;
+  --color-danger: #c53030;
+
+  --shadow-card: 0 1px 2px rgba(16, 22, 28, 0.05);
+  --shadow-lift: 0 4px 16px -4px rgba(16, 22, 28, 0.12), 0 1px 2px rgba(16, 22, 28, 0.06);
+  --shadow-pop: 0 16px 48px -12px rgba(12, 49, 87, 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink-900);
+  font-feature-settings: "cv02", "cv03", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-100);
+  color: var(--color-brand-800);
+}
+
+button,
+a,
+label[for],
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ————— Motion ————— */
+@keyframes iris-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes iris-breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.86); opacity: 0.75; }
+}
+@keyframes loader-bar {
+  0% { transform: translateX(-100%); }
+  55% { transform: translateX(0%); }
+  100% { transform: translateX(101%); }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes reel-shift {
+  0% { transform: translateX(0) scale(1.04); }
+  50% { transform: translateX(-2.5%) scale(1.09); }
+  100% { transform: translateX(0) scale(1.04); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes splash-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes splash-pop {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes splash-rise {
+  from { transform: translateY(110%); }
+  to { transform: translateY(0); }
+}
+
+.anim-rise {
+  animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade {
+  animation: fade-in 0.4s ease-out both;
+}
+.anim-ticker {
+  animation: ticker 42s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

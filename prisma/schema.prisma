@@ -1,0 +1,362 @@
+// Kaledio data model — mirrors src/lib/types.ts, unified so production
+// listings and public casting calls are one table (isPublic flag).
+// Display strings like "3d ago" are derived from timestamps at the resolver.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Persona {
+  TALENT
+  CREATIVE
+  PRODUCTION
+}
+
+enum RegistrationType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum Availability {
+  OPEN
+  LISTENING
+  BOOKED
+}
+
+enum ApplicationStatus {
+  APPLIED
+  AUDITION_REQUESTED
+  FINALIZED
+  REJECTED
+}
+
+enum PostKind {
+  ANNOUNCEMENT
+  CASTING
+  TRAILER
+  BTS
+}
+
+enum MediaTone {
+  MIDNIGHT
+  STEEL
+  SKY
+  NOIR
+  PORCELAIN
+  DUSK
+}
+
+enum MediaAspect {
+  WIDE
+  TALL
+  SQUARE
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model User {
+  id               String           @id @default(cuid())
+  /// Supabase Auth user id (auth.users.id)
+  authId           String?          @unique @db.Uuid
+  email            String           @unique
+  name             String
+  persona          Persona
+  registrationType RegistrationType @default(INDIVIDUAL)
+  roles            String[]
+  location         String           @default("")
+  headline         String           @default("")
+  bio              String           @default("")
+  availability     Availability     @default(OPEN)
+  yearsExp         Int              @default(0)
+  skills           String[]
+  connectionsCount Int              @default(0)
+  hue              Int              @default(0)
+  reelTitle        String           @default("")
+  reelDuration     String           @default("")
+  /// seeded showcase profiles (the 14 mock people) vs real accounts
+  isDemo           Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+
+  details        ProfileDetails?
+  credits        Credit[]
+  portfolio      PortfolioItem[]
+  posts          Post[]
+  likes          Like[]
+  comments       Comment[]
+  postedCalls    CastingCall[]
+  applications   Application[]
+  conversationsA Conversation[]  @relation("ParticipantA")
+  conversationsB Conversation[]  @relation("ParticipantB")
+  sentMessages   Message[]
+  connectionsSent     Connection[]     @relation("Requester")
+  connectionsReceived Connection[]     @relation("Recipient")
+  calendarBookmarks   CalendarBookmark[]
+  customEvents        CustomEvent[]
+
+  @@index([persona])
+  @@index([location])
+}
+
+/// Registration-type-specific profile fields (both shapes share one row;
+/// which columns are meaningful depends on User.registrationType).
+model ProfileDetails {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // individual identity
+  firstName       String    @default("")
+  middleName      String    @default("")
+  lastName        String    @default("")
+  dateOfBirth     DateTime? @db.Date
+  countryOfOrigin String    @default("")
+  resumeUrl       String    @default("")
+
+  // company identity
+  companyName           String @default("")
+  category              String @default("")
+  registrationNumber    String @default("")
+  stateOfRegistration   String @default("")
+  countryOfRegistration String @default("")
+  handbookUrl           String @default("")
+
+  // shared
+  contactNumber    String   @default("")
+  emailAddress     String   @default("")
+  address          String   @default("")
+  languagesSpoken  String   @default("")
+  languagesWritten String   @default("")
+  qualification    String   @default("")
+  theaterLink      String   @default("")
+  mainstreamLink   String   @default("")
+  televisionLink   String   @default("")
+  imdbLink         String   @default("")
+  certifications   String   @default("")
+  honors           String   @default("")
+  targetAudience   String[]
+  /// storage URLs once Supabase Storage lands (data URLs meanwhile)
+  profilePictureUrl String  @default("")
+  gallery          String[]
+}
+
+model Credit {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String
+  project   String
+  kind      String
+  year      String
+  note      String?
+  sortOrder Int     @default(0)
+
+  @@index([userId])
+}
+
+model PortfolioItem {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  kind      String
+  year      String
+  tone      MediaTone
+  aspect    MediaAspect @default(WIDE)
+  sortOrder Int         @default(0)
+
+  @@index([userId])
+}
+
+model CastingCall {
+  id               String   @id @default(cuid())
+  title            String
+  company          String
+  medium           String
+  location         String
+  compensation     String
+  shootDates       String
+  deadline         DateTime
+  shootStart       DateTime
+  requiresAudition Boolean  @default(true)
+  /// false = private listing visible only in the poster's Studio console
+  isPublic         Boolean  @default(true)
+  description      String
+  requirements     String[]
+  tags             String[]
+  /// baseline applicant count carried over from seed data; the displayed
+  /// total is seedApplicants + count(applications)
+  seedApplicants   Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  postedById String
+  postedBy   User   @relation(fields: [postedById], references: [id])
+
+  lookingFor   CastingRole[]
+  applications Application[]
+  posts        Post[]
+  bookmarkedBy CalendarBookmark[]
+
+  @@index([medium])
+  @@index([location])
+  @@index([deadline])
+  @@index([postedById])
+}
+
+model CastingRole {
+  id        String      @id @default(cuid())
+  callId    String
+  call      CastingCall @relation(fields: [callId], references: [id], onDelete: Cascade)
+  name      String
+  brief     String
+  sortOrder Int         @default(0)
+
+  @@index([callId])
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  callId      String
+  call        CastingCall       @relation(fields: [callId], references: [id], onDelete: Cascade)
+  applicantId String
+  applicant   User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  status      ApplicationStatus @default(APPLIED)
+  note        String            @default("")
+  auditionAt  DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([callId, applicantId])
+  @@index([applicantId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  kind      PostKind
+  text      String
+  createdAt DateTime @default(now())
+
+  // optional inline media stub (offline placeholder art, legacy seed content)
+  mediaTitle  String?
+  mediaKind   String?
+  mediaYear   String?
+  mediaTone   MediaTone?
+  mediaAspect MediaAspect?
+
+  // real user-uploaded attachment (data URL, same pattern as profile photos)
+  mediaDataUrl  String?
+  mediaMimeType String?
+
+  castingCallId String?
+  castingCall   CastingCall? @relation(fields: [castingCallId], references: [id], onDelete: SetNull)
+
+  /// engagement baselines carried over from seed data; displayed totals are
+  /// seed counts + real Like/Comment rows
+  seedLikes    Int @default(0)
+  seedComments Int @default(0)
+
+  likes    Like[]
+  comments Comment[]
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model Like {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, postId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+}
+
+/// Direct message thread between two members. Unread counts derive from
+/// messages newer than the participant's lastReadAt.
+model Conversation {
+  id             String   @id @default(cuid())
+  participantAId String
+  participantA   User     @relation("ParticipantA", fields: [participantAId], references: [id], onDelete: Cascade)
+  participantBId String
+  participantB   User     @relation("ParticipantB", fields: [participantBId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  lastMessageAt  DateTime @default(now())
+  aLastReadAt    DateTime?
+  bLastReadAt    DateTime?
+
+  messages Message[]
+
+  @@unique([participantAId, participantBId])
+  @@index([participantBId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  text           String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+/// LinkedIn-style connection request, independent of messaging.
+model Connection {
+  id          String           @id @default(cuid())
+  requesterId String
+  requester   User             @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  recipientId String
+  recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  status      ConnectionStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  respondedAt DateTime?
+
+  @@index([recipientId])
+  @@index([requesterId])
+}
+
+/// A casting call the user has explicitly saved to their calendar.
+model CalendarBookmark {
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  callId    String
+  call      CastingCall @relation(fields: [callId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@id([userId, callId])
+}
+
+/// A user-created calendar entry not tied to any casting call.
+model CustomEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  eventDate DateTime @db.Date
+  note      String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
