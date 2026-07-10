@@ -1,6 +1,4 @@
 import type {
-  Credit,
-  MediaItem,
   Persona,
   ProfileDetails,
   RegistrationType,
@@ -231,67 +229,4 @@ export function defaultBio(persona: Persona, roles: string[]): string {
     case "production":
       return `We find, package and back the right people for the right projects. Slate open — talk to us.`;
   }
-}
-
-interface ProfileDefaults {
-  skills: string[];
-  credits: Credit[];
-  portfolio: MediaItem[];
-  reelTitle: string;
-  reelDuration: string;
-  connections: number;
-}
-
-export function profileDefaults(user: SessionUser): ProfileDefaults {
-  const year = "2026";
-  const base: Record<Persona, ProfileDefaults> = {
-    talent: {
-      skills: ["Screen acting", "Improv", "Two languages", "Self-tape setup", "Movement basics"],
-      credits: [
-        { id: "d1", role: "Featured", project: "Student thesis film", kind: "Short Film", year: "2025" },
-        { id: "d2", role: "Principal", project: "Regional TVC", kind: "Ad Film", year: "2025" },
-        { id: "d3", role: "Ensemble", project: "College theatre fest", kind: "Theatre", year: "2024" },
-      ],
-      portfolio: [
-        { id: "dp1", title: "Headshots — natural light", kind: "STILL", year, tone: "porcelain", aspect: "tall" },
-        { id: "dp2", title: "Self tape — drama", kind: "SELF TAPE", year, tone: "noir", aspect: "tall" },
-        { id: "dp3", title: "Regional TVC", kind: "AD FILM", year: "2025", tone: "sky", aspect: "wide" },
-        { id: "dp4", title: "Movement study", kind: "REEL CLIP", year, tone: "dusk", aspect: "square" },
-      ],
-      reelTitle: `Acting Reel — ${year}`,
-      reelDuration: "1:48",
-      connections: 34,
-    },
-    creative: {
-      skills: ["Story sense", "On-set discipline", "Post workflow", "Pitch decks", "Small-crew jugaad"],
-      credits: [
-        { id: "d1", role: user.roles[0] || "Creative", project: "Festival short 'First Draft'", kind: "Short Film", year: "2025" },
-        { id: "d2", role: user.roles[0] || "Creative", project: "Branded doc series", kind: "Branded", year: "2025" },
-        { id: "d3", role: "Assistant", project: "Feature (uncredited)", kind: "Feature Film", year: "2024" },
-      ],
-      portfolio: [
-        { id: "dp1", title: "First Draft", kind: "SHORT FILM", year: "2025", tone: "midnight", aspect: "wide" },
-        { id: "dp2", title: "Branded doc — ep 2", kind: "BRANDED", year: "2025", tone: "steel", aspect: "wide" },
-        { id: "dp3", title: "Frames I like", kind: "SELECTS", year, tone: "dusk", aspect: "square" },
-      ],
-      reelTitle: `Selected Work — ${year}`,
-      reelDuration: "2:10",
-      connections: 51,
-    },
-    production: {
-      skills: ["Casting briefs", "Budgets that close", "Talent relationships", "Contracts", "Release strategy"],
-      credits: [
-        { id: "d1", role: "Line producer", project: "Two ad campaigns", kind: "Ad Film", year: "2025" },
-        { id: "d2", role: "Associate", project: "OTT anthology (1 ep)", kind: "OTT Series", year: "2024" },
-      ],
-      portfolio: [
-        { id: "dp1", title: "Slate overview", kind: "SLATE", year, tone: "midnight", aspect: "wide" },
-        { id: "dp2", title: "Open calls", kind: "CASTING", year, tone: "porcelain", aspect: "square" },
-      ],
-      reelTitle: "Company Sizzle",
-      reelDuration: "1:12",
-      connections: 87,
-    },
-  };
-  return base[user.persona];
 }

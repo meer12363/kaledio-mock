@@ -106,69 +106,70 @@ export function TopNav() {
               </Link>
             );
           })}
-
-          {/* Profile menu */}
-          <div className="relative ml-1 sm:ml-2" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-haspopup="menu"
-              aria-expanded={menuOpen}
-              aria-label="Account menu"
-              className={`flex h-14 min-w-[44px] shrink-0 flex-col items-center justify-center gap-0.5 px-1.5 text-[11px] font-medium transition-colors duration-150 sm:min-w-[64px] ${
-                pathname === "/profile" ? "text-ink-900" : "text-ink-500 hover:text-ink-800"
-              }`}
-            >
-              <Avatar name={user.name} hue={3} size={22} src={avatarSrc} />
-              <span className="hidden sm:block">Me</span>
-              {pathname === "/profile" && (
-                <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-t-full bg-ink-900" />
-              )}
-            </button>
-
-            {menuOpen && (
-              <div
-                role="menu"
-                className="anim-rise absolute right-0 top-[calc(100%+4px)] w-64 rounded-xl border border-line bg-paper p-2 shadow-lift"
-                style={{ animationDuration: "0.18s" }}
-              >
-                <div className="flex items-center gap-3 rounded-lg p-2.5">
-                  <Avatar name={user.name} hue={3} size={40} src={avatarSrc} />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-ink-900">{user.name}</p>
-                    <p className="truncate text-xs text-ink-500">{user.headline}</p>
-                  </div>
-                </div>
-                <div className="mx-2.5 mb-2 flex items-center gap-1.5 text-xs text-ink-500">
-                  <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
-                  {availability.label}
-                </div>
-                <div className="my-1 border-t border-line" />
-                <button
-                  role="menuitem"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    router.push("/profile");
-                  }}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-canvas"
-                >
-                  <IconUser size={17} /> View profile
-                </button>
-                <div className="my-1 border-t border-line" />
-                <button
-                  role="menuitem"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    signOut();
-                    router.push("/");
-                  }}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-canvas"
-                >
-                  <IconLogout size={17} /> Sign out
-                </button>
-              </div>
-            )}
-          </div>
         </nav>
+
+        {/* Profile menu — outside the scrollable nav so the dropdown isn't
+            clipped by its overflow */}
+        <div className="relative ml-1 shrink-0 sm:ml-2" ref={menuRef}>
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label="Account menu"
+            className={`flex h-14 min-w-[44px] shrink-0 flex-col items-center justify-center gap-0.5 px-1.5 text-[11px] font-medium transition-colors duration-150 sm:min-w-[64px] ${
+              pathname === "/profile" ? "text-ink-900" : "text-ink-500 hover:text-ink-800"
+            }`}
+          >
+            <Avatar name={user.name} hue={3} size={22} src={avatarSrc} />
+            <span className="hidden sm:block">Me</span>
+            {pathname === "/profile" && (
+              <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-t-full bg-ink-900" />
+            )}
+          </button>
+
+          {menuOpen && (
+            <div
+              role="menu"
+              className="anim-rise absolute right-0 top-[calc(100%+4px)] w-64 rounded-xl border border-line bg-paper p-2 shadow-lift"
+              style={{ animationDuration: "0.18s" }}
+            >
+              <div className="flex items-center gap-3 rounded-lg p-2.5">
+                <Avatar name={user.name} hue={3} size={40} src={avatarSrc} />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-ink-900">{user.name}</p>
+                  <p className="truncate text-xs text-ink-500">{user.headline}</p>
+                </div>
+              </div>
+              <div className="mx-2.5 mb-2 flex items-center gap-1.5 text-xs text-ink-500">
+                <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
+                {availability.label}
+              </div>
+              <div className="my-1 border-t border-line" />
+              <button
+                role="menuitem"
+                onClick={() => {
+                  setMenuOpen(false);
+                  router.push("/profile");
+                }}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-canvas"
+              >
+                <IconUser size={17} /> View profile
+              </button>
+              <div className="my-1 border-t border-line" />
+              <button
+                role="menuitem"
+                onClick={() => {
+                  setMenuOpen(false);
+                  signOut();
+                  router.push("/");
+                }}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-canvas"
+              >
+                <IconLogout size={17} /> Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

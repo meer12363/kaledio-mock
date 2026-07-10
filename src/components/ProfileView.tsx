@@ -67,7 +67,7 @@ export function ProfileView({
               <span className="flex items-center gap-1.5">
                 <IconMapPin size={14} /> {profile.location}
               </span>
-              {profile.yearsExp !== undefined && (
+              {!!profile.yearsExp && (
                 <span className="flex items-center gap-1.5">
                   <IconFilm size={14} /> {profile.yearsExp} years in the industry
                 </span>
@@ -96,75 +96,83 @@ export function ProfileView({
             {aboutExtra}
           </Card>
 
-          {/* showreel */}
-          <Card className="anim-rise p-6 sm:p-7">
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Showreel</h2>
-              <span className="text-xs font-medium text-ink-400">
-                {profile.reelTitle} · {profile.reelDuration}
-              </span>
-            </div>
-            <div className="mt-4">
-              <ShowreelPlayer
-                title={profile.reelTitle}
-                duration={profile.reelDuration}
-                ownerName={profile.name}
-              />
-            </div>
-          </Card>
+          {/* showreel — only once the member has published one */}
+          {profile.reelTitle && (
+            <Card className="anim-rise p-6 sm:p-7">
+              <div className="flex items-baseline justify-between">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Showreel</h2>
+                <span className="text-xs font-medium text-ink-400">
+                  {profile.reelTitle} · {profile.reelDuration}
+                </span>
+              </div>
+              <div className="mt-4">
+                <ShowreelPlayer
+                  title={profile.reelTitle}
+                  duration={profile.reelDuration}
+                  ownerName={profile.name}
+                />
+              </div>
+            </Card>
+          )}
 
           {/* experience */}
-          <Card className="anim-rise p-6 sm:p-7">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Experience</h2>
-            <ol className="mt-4 space-y-0">
-              {credits.map((c, i) => (
-                <li key={c.id} className={`flex gap-4 ${i > 0 ? "mt-5 border-t border-line pt-5" : ""}`}>
-                  <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-canvas text-ink-400">
-                    <IconFilm size={17} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[15px] font-semibold text-ink-900">{c.role}</p>
-                    <p className="text-sm text-ink-600">
-                      {c.project} <span className="text-ink-400">· {c.kind} · {c.year}</span>
-                    </p>
-                    {c.note && <p className="mt-1 text-[13px] text-ink-500">{c.note}</p>}
-                  </div>
-                </li>
-              ))}
-            </ol>
-            {profile.credits.length > 3 && (
-              <button
-                onClick={() => setShowAllCredits((s) => !s)}
-                className="mt-5 w-full rounded-lg border-t border-line pt-4 text-center text-[13px] font-semibold text-brand-600 hover:text-brand-700"
-              >
-                {showAllCredits ? "Show fewer credits" : `Show all ${profile.credits.length} credits`}
-              </button>
-            )}
-          </Card>
+          {profile.credits.length > 0 && (
+            <Card className="anim-rise p-6 sm:p-7">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Experience</h2>
+              <ol className="mt-4 space-y-0">
+                {credits.map((c, i) => (
+                  <li key={c.id} className={`flex gap-4 ${i > 0 ? "mt-5 border-t border-line pt-5" : ""}`}>
+                    <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-canvas text-ink-400">
+                      <IconFilm size={17} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[15px] font-semibold text-ink-900">{c.role}</p>
+                      <p className="text-sm text-ink-600">
+                        {c.project} <span className="text-ink-400">· {c.kind} · {c.year}</span>
+                      </p>
+                      {c.note && <p className="mt-1 text-[13px] text-ink-500">{c.note}</p>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              {profile.credits.length > 3 && (
+                <button
+                  onClick={() => setShowAllCredits((s) => !s)}
+                  className="mt-5 w-full rounded-lg border-t border-line pt-4 text-center text-[13px] font-semibold text-brand-600 hover:text-brand-700"
+                >
+                  {showAllCredits ? "Show fewer credits" : `Show all ${profile.credits.length} credits`}
+                </button>
+              )}
+            </Card>
+          )}
 
           {/* portfolio */}
-          <Card className="anim-rise p-6 sm:p-7">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Portfolio</h2>
-            <div className="mt-4 columns-2 gap-3.5 [&>*]:mb-3.5 sm:columns-3">
-              {profile.portfolio.map((item) => (
-                <div key={item.id} className="break-inside-avoid transition-transform duration-200 hover:scale-[1.015]">
-                  <MediaPlaceholder item={item} />
-                </div>
-              ))}
-            </div>
-          </Card>
+          {profile.portfolio.length > 0 && (
+            <Card className="anim-rise p-6 sm:p-7">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Portfolio</h2>
+              <div className="mt-4 columns-2 gap-3.5 [&>*]:mb-3.5 sm:columns-3">
+                {profile.portfolio.map((item) => (
+                  <div key={item.id} className="break-inside-avoid transition-transform duration-200 hover:scale-[1.015]">
+                    <MediaPlaceholder item={item} />
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
         </div>
 
         {/* side rail */}
         <aside className="space-y-5">
-          <Card className="anim-rise p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Skills</h2>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {profile.skills.map((s) => (
-                <Tag key={s}>{s}</Tag>
-              ))}
-            </div>
-          </Card>
+          {profile.skills.length > 0 && (
+            <Card className="anim-rise p-5">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Skills</h2>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {profile.skills.map((s) => (
+                  <Tag key={s}>{s}</Tag>
+                ))}
+              </div>
+            </Card>
+          )}
           <Card className="anim-rise p-5">
             <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Details</h2>
             <dl className="mt-3 space-y-3 text-sm">

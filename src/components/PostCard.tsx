@@ -13,7 +13,15 @@ import {
   IconShare,
 } from "./icons";
 import { gql } from "@/lib/gql";
+import { useSession } from "@/lib/session";
 import type { MediaItem, PostKind } from "@/lib/types";
+
+interface PostComment {
+  id: string;
+  author: { id: string; name: string; headline: string; hue: number; avatarUrl?: string };
+  text: string;
+  timeAgo: string;
+}
 
 export interface FeedPost {
   id: string;
@@ -43,18 +51,22 @@ const KIND_LABELS: Record<PostKind, string> = {
 };
 
 export function PostCard({ post }: { post: FeedPost }) {
+  const { user } = useSession();
   const [liked, setLiked] = useState(post.liked);
   const [likes, setLikes] = useState(post.likes);
   const [commentCount, setCommentCount] = useState(post.comments);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [draft, setDraft] = useState("");
-  const [myComments, setMyComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<PostComment[] | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // optimistic posts don't exist on the server until createPost confirms
+  const isPending = post.id.startsWith("pending-");
 
   const toggleLike = () => {
     setLiked((l) => !l);
     setLikes((n) => (liked ? n - 1 : n + 1));
-    if (!post.mine) {
+    if (!isPending) {
       gql(`mutation($id: ID!) { toggleLike(id: $id) { id likes liked } }`, { id: post.id }).catch(() => {
         // revert on failure
         setLiked(liked);
@@ -63,14 +75,42 @@ export function PostCard({ post }: { post: FeedPost }) {
     }
   };
 
+  const openComments = () => {
+    setCommentsOpen((o) => !o);
+    if (comments !== null || isPending) return;
+    gql<{ postComments: PostComment[] }>(
+      `query($postId: ID!) {
+        postComments(postId: $postId) {
+          id text timeAgo
+          author { id name headline hue avatarUrl }
+        }
+      }`,
+      { postId: post.id }
+    )
+      .then((d) => setComments(d.postComments))
+      .catch(() => setComments([]));
+  };
+
   const addComment = (e: React.FormEvent) => {
     e.preventDefault();
     const text = draft.trim();
-    if (!text) return;
-    setMyComments((c) => [...c, text]);
+    if (!text || !user) return;
+    const optimistic: PostComment = {
+      id: `local-${Date.now()}`,
+      author: {
+        id: user.id ?? "me",
+        name: user.name,
+        headline: user.headline,
+        hue: 3,
+        avatarUrl: user.details?.profilePicture || undefined,
+      },
+      text,
+      timeAgo: "now",
+    };
+    setComments((c) => [...(c ?? []), optimistic]);
     setCommentCount((n) => n + 1);
     setDraft("");
-    if (!post.mine) {
+    if (!isPending) {
       gql(`mutation($postId: ID!, $text: String!) { addComment(postId: $postId, text: $text) }`, {
         postId: post.id,
         text,
@@ -184,7 +224,7 @@ export function PostCard({ post }: { post: FeedPost }) {
           {likes.toLocaleString("en-IN")}
         </button>
         <button
-          onClick={() => setCommentsOpen((o) => !o)}
+          onClick={openComments}
           aria-expanded={commentsOpen}
           className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-canvas hover:text-ink-800"
         >
@@ -202,15 +242,27 @@ export function PostCard({ post }: { post: FeedPost }) {
 
       {commentsOpen && (
         <div className="border-t border-line bg-canvas/60 px-4 py-3.5 sm:px-5">
-          {myComments.length > 0 && (
+          {comments === null && !isPending && (
+            <p className="mb-3 text-[13px] text-ink-400">Loading comments…</p>
+          )}
+          {comments && comments.length > 0 && (
             <ul className="mb-3 space-y-2">
-              {myComments.map((c, i) => (
-                <li key={i} className="rounded-lg bg-paper px-3.5 py-2.5 text-sm text-ink-700 shadow-card">
-                  <span className="mr-2 font-semibold text-ink-900">You</span>
-                  {c}
+              {comments.map((c) => (
+                <li key={c.id} className="flex items-start gap-2.5 rounded-lg bg-paper px-3.5 py-2.5 shadow-card">
+                  <Avatar name={c.author.name} hue={c.author.hue} size={28} src={c.author.avatarUrl || undefined} />
+                  <div className="min-w-0">
+                    <p className="text-[13px]">
+                      <span className="font-semibold text-ink-900">{c.author.name}</span>
+                      <span className="ml-2 text-xs text-ink-400">{c.timeAgo}</span>
+                    </p>
+                    <p className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-ink-700">{c.text}</p>
+                  </div>
                 </li>
               ))}
             </ul>
+          )}
+          {comments && comments.length === 0 && (
+            <p className="mb-3 text-[13px] text-ink-400">No comments yet — start the conversation.</p>
           )}
           <form onSubmit={addComment} className="flex items-center gap-2">
             <input

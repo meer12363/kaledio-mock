@@ -34,6 +34,13 @@ interface SidebarPerson {
   avatarUrl: string;
 }
 
+const EMOJI_SET = [
+  "😀", "😄", "😂", "😊", "😍", "🤩", "😎", "🥳",
+  "🙌", "👏", "👍", "🙏", "💪", "🤝", "❤️", "🔥",
+  "✨", "🌟", "🎉", "🏆", "🎬", "🎥", "🎭", "🎤",
+  "🎶", "💃", "🕺", "📸", "🎞️", "🍿", "🎧", "✍️",
+];
+
 const FEED_QUERY = /* GraphQL */ `
   query {
     feed {
@@ -77,8 +84,10 @@ export default function HomePage() {
   const [draft, setDraft] = useState("");
   const [attachment, setAttachment] = useState<{ url: string; kind: "image" | "video" } | null>(null);
   const [attachError, setAttachError] = useState("");
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const [error, setError] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const draftInput = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     gql<{
@@ -105,6 +114,18 @@ export default function HomePage() {
   if (!user) return null;
 
   const avatarSrc = user.details.profilePicture || undefined;
+
+  const insertEmoji = (emoji: string) => {
+    const el = draftInput.current;
+    const at = el ? el.selectionStart : draft.length;
+    const end = el ? el.selectionEnd : draft.length;
+    setDraft((d) => d.slice(0, at) + emoji + d.slice(end));
+    if (el) {
+      el.focus();
+      const caret = at + emoji.length;
+      requestAnimationFrame(() => el.setSelectionRange(caret, caret));
+    }
+  };
 
   const onAttach = async (file?: File) => {
     if (!file) return;
@@ -138,6 +159,7 @@ export default function HomePage() {
     const mediaUrl = attachment?.url;
     const mediaType = attachment?.kind;
     setAttachment(null);
+    setEmojiOpen(false);
     setComposing(false);
     gql<{ createPost: FeedPost }>(
       `mutation($text: String!, $mediaUrl: String, $mediaType: String) {
@@ -219,6 +241,7 @@ export default function HomePage() {
               <div className="flex items-start gap-3">
                 <Avatar name={user.name} hue={3} size={42} src={avatarSrc} />
                 <textarea
+                  ref={draftInput}
                   autoFocus
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
@@ -250,13 +273,41 @@ export default function HomePage() {
               {attachError && <p className="ml-[54px] mt-2 text-xs font-medium text-danger">{attachError}</p>}
 
               <div className="mt-3 flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => fileInput.current?.click()}
-                  className="rounded-full border border-line-strong px-4 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:text-brand-700"
-                >
-                  Photo / video
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInput.current?.click()}
+                    className="rounded-full border border-line-strong px-4 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:text-brand-700"
+                  >
+                    Photo / video
+                  </button>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setEmojiOpen((o) => !o)}
+                      aria-expanded={emojiOpen}
+                      aria-label="Add emoji"
+                      className="rounded-full border border-line-strong px-4 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-brand-300 hover:text-brand-700"
+                    >
+                      😊 Emoji
+                    </button>
+                    {emojiOpen && (
+                      <div className="anim-rise absolute bottom-[calc(100%+6px)] left-0 z-20 grid w-64 grid-cols-8 gap-0.5 rounded-xl border border-line bg-paper p-2 shadow-lift">
+                        {EMOJI_SET.map((emoji) => (
+                          <button
+                            key={emoji}
+                            type="button"
+                            onClick={() => insertEmoji(emoji)}
+                            aria-label={`Insert ${emoji}`}
+                            className="flex h-7 w-7 items-center justify-center rounded-md text-[17px] transition-colors hover:bg-canvas"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <input
                   ref={fileInput}
                   type="file"
@@ -275,6 +326,7 @@ export default function HomePage() {
                       setDraft("");
                       setAttachment(null);
                       setAttachError("");
+                      setEmojiOpen(false);
                     }}
                     className="rounded-full px-4 py-2 text-sm font-semibold text-ink-500 transition-colors hover:bg-canvas"
                   >

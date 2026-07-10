@@ -2,12 +2,7 @@ import { createSchema, createYoga } from "graphql-yoga";
 import { GraphQLError } from "graphql";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabaseForToken } from "@/lib/supabase";
-import {
-  defaultBio,
-  defaultHeadline,
-  emptyDetails,
-  profileDefaults,
-} from "@/lib/persona";
+import { defaultBio, defaultHeadline, emptyDetails } from "@/lib/persona";
 import type { Persona, RegistrationType, SessionUser } from "@/lib/types";
 
 /* ————————————————— context ————————————————— */
@@ -387,6 +382,8 @@ const typeDefs = /* GraphQL */ `
 
   type PostAuthor { id: ID!, name: String!, headline: String!, hue: Int!, avatarUrl: String! }
 
+  type PostComment { id: ID!, author: PostAuthor!, text: String!, timeAgo: String! }
+
   type Post {
     id: ID!
     author: PostAuthor!
@@ -478,6 +475,7 @@ const typeDefs = /* GraphQL */ `
   type Query {
     me: Me
     feed: [Post!]!
+    postComments(postId: ID!): [PostComment!]!
     castingCalls(medium: String, location: String, query: String): [CastingCall!]!
     castingCall(id: ID!): CastingCall
     people(query: String, role: String, location: String, minYears: Int, availability: String): [Person!]!
@@ -582,6 +580,21 @@ const resolvers = {
         likedIds = new Set((likes ?? []).map((l: any) => l.postId));
       }
       return (data ?? []).map((row: any) => mapPost(row, likedIds));
+    },
+
+    postComments: async (_: unknown, { postId }: { postId: string }, ctx: Ctx) => {
+      const { data, error } = await ctx.db
+        .from("Comment")
+        .select(`id, text, createdAt, author:User!Comment_authorId_fkey(id, name, headline, hue, details:ProfileDetails(profilePictureUrl))`)
+        .eq("postId", postId)
+        .order("createdAt", { ascending: true });
+      if (error) fail(error.message);
+      return (data ?? []).map((c: any) => ({
+        id: c.id,
+        author: mapAuthor(c.author),
+        text: c.text,
+        timeAgo: ago(c.createdAt),
+      }));
     },
 
     castingCalls: async (
@@ -818,8 +831,9 @@ const resolvers = {
         availability: "open",
         details: emptyDetails(args.name, email, args.location, registrationType),
       };
-      const defaults = profileDefaults(sessionShape);
 
+      // Profiles start empty — credits, portfolio, skills and connections
+      // only exist once the member publishes them.
       const { error: userErr } = await ctx.db.from("User").insert({
         id,
         authId,
@@ -832,11 +846,11 @@ const resolvers = {
         headline: sessionShape.headline,
         bio: sessionShape.bio,
         availability: "OPEN",
-        skills: defaults.skills,
-        connectionsCount: defaults.connections,
+        skills: [],
+        connectionsCount: 0,
         hue: Math.floor(Math.random() * 14),
-        reelTitle: defaults.reelTitle,
-        reelDuration: defaults.reelDuration,
+        reelTitle: "",
+        reelDuration: "",
       });
       if (userErr) fail(userErr.message);
 
@@ -844,31 +858,6 @@ const resolvers = {
         .from("ProfileDetails")
         .insert({ userId: id, ...detailsToRow(sessionShape.details) });
       if (detErr) fail(detErr.message);
-
-      await ctx.db.from("Credit").insert(
-        defaults.credits.map((c, i) => ({
-          id: crypto.randomUUID(),
-          userId: id,
-          role: c.role,
-          project: c.project,
-          kind: c.kind,
-          year: c.year,
-          note: c.note ?? null,
-          sortOrder: i,
-        }))
-      );
-      await ctx.db.from("PortfolioItem").insert(
-        defaults.portfolio.map((m, i) => ({
-          id: crypto.randomUUID(),
-          userId: id,
-          title: m.title,
-          kind: m.kind,
-          year: m.year,
-          tone: m.tone.toUpperCase(),
-          aspect: m.aspect.toUpperCase(),
-          sortOrder: i,
-        }))
-      );
 
       const meRow = await fetchMe(ctx);
       if (!meRow) fail("Profile creation failed.");
