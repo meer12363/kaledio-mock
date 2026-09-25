@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { TopNav } from "@/components/TopNav";
+import { ToastProvider } from "@/components/Toast";
+import { WelcomeModal } from "@/components/WelcomeModal";
 import { useSession } from "@/lib/session";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -19,11 +21,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-canvas">
-      <TopNav />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-16 pt-6">
-        {children}
-      </main>
-    </div>
+    <ToastProvider>
+      <div className="relative flex min-h-dvh flex-col bg-canvas">
+        {/* ambient gradient mesh behind everything */}
+        <div className="pointer-events-none fixed inset-0 -z-10 [background:var(--grad-mesh)]" aria-hidden="true" />
+        <TopNav />
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-28 pt-6 md:pb-16">
+          {children}
+        </main>
+        <WelcomeModal />
+      </div>
+    </ToastProvider>
   );
 }

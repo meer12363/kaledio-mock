@@ -59,11 +59,16 @@ export function PostCard({ post }: { post: FeedPost }) {
   const [draft, setDraft] = useState("");
   const [comments, setComments] = useState<PostComment[] | null>(null);
   const [copied, setCopied] = useState(false);
+  const [burst, setBurst] = useState(false);
 
   // optimistic posts don't exist on the server until createPost confirms
   const isPending = post.id.startsWith("pending-");
 
   const toggleLike = () => {
+    if (!liked) {
+      setBurst(true);
+      window.setTimeout(() => setBurst(false), 600);
+    }
     setLiked((l) => !l);
     setLikes((n) => (liked ? n - 1 : n + 1));
     if (!isPending) {
@@ -134,7 +139,7 @@ export function PostCard({ post }: { post: FeedPost }) {
   const profileHref = post.mine ? "/profile" : `/profile/${post.author.id}`;
 
   return (
-    <Card className="overflow-hidden">
+    <Card interactive className="overflow-hidden">
       <div className="p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <Link href={profileHref} aria-label={`${post.author.name}'s profile`}>
@@ -156,8 +161,12 @@ export function PostCard({ post }: { post: FeedPost }) {
           <span
             className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
               post.kind === "casting"
-                ? "bg-brand-50 text-brand-700"
-                : "bg-canvas text-ink-500"
+                ? "text-white shadow-glow-accent [background:var(--grad-spotlight)]"
+                : post.kind === "trailer"
+                ? "bg-pop-50 text-pop-700"
+                : post.kind === "bts"
+                ? "bg-accent-50 text-accent-700"
+                : "bg-brand-50 text-brand-700"
             }`}
           >
             {KIND_LABELS[post.kind]}
@@ -216,11 +225,23 @@ export function PostCard({ post }: { post: FeedPost }) {
         <button
           onClick={toggleLike}
           aria-pressed={liked}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors duration-150 ${
-            liked ? "text-brand-600" : "text-ink-500 hover:bg-canvas hover:text-ink-800"
+          className={`press flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors duration-150 ${
+            liked ? "text-accent-600" : "text-ink-500 hover:bg-canvas hover:text-ink-800"
           }`}
         >
-          <IconHeart size={17} filled={liked} className={liked ? "scale-110" : ""} />
+          <span className="relative inline-flex">
+            <IconHeart
+              size={17}
+              filled={liked}
+              style={burst ? { animation: "like-burst 0.55s cubic-bezier(0.34,1.56,0.64,1)" } : undefined}
+            />
+            {burst && (
+              <span
+                className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent-500"
+                style={{ animation: "heart-ring 0.6s ease-out forwards" }}
+              />
+            )}
+          </span>
           {likes.toLocaleString("en-IN")}
         </button>
         <button

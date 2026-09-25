@@ -2,6 +2,7 @@ interface IconProps {
   size?: number;
   className?: string;
   filled?: boolean;
+  style?: React.CSSProperties;
 }
 
 function Base({
@@ -9,6 +10,7 @@ function Base({
   className = "",
   children,
   filled = false,
+  style,
 }: IconProps & { children: React.ReactNode }) {
   return (
     <svg
@@ -21,6 +23,7 @@ function Base({
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`shrink-0 ${className}`}
+      style={style}
       aria-hidden="true"
     >
       {children}
@@ -204,5 +207,31 @@ export const IconMail = (p: IconProps) => (
   <Base {...p}>
     <rect x="3" y="5.5" width="18" height="13" rx="2.2" />
     <path d="m4 7 8 6.2L20 7" />
+  </Base>
+);
+
+export const IconPlus = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </Base>
+);
+
+export const IconBell = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M6 9a6 6 0 0 1 12 0c0 4 1.2 5.6 2 6.5H4c.8-.9 2-2.5 2-6.5Z" />
+    <path d="M9.5 19a2.5 2.5 0 0 0 5 0" />
+  </Base>
+);
+
+export const IconSparkle = (p: IconProps) => (
+  <Base {...p} filled>
+    <path d="M12 2.6c.5 3.9 1.9 5.3 5.8 5.8-3.9.5-5.3 1.9-5.8 5.8-.5-3.9-1.9-5.3-5.8-5.8 3.9-.5 5.3-1.9 5.8-5.8Z" />
+    <path d="M18.5 13.5c.3 1.9.9 2.5 2.8 2.8-1.9.3-2.5.9-2.8 2.8-.3-1.9-.9-2.5-2.8-2.8 1.9-.3 2.5-.9 2.8-2.8Z" />
+  </Base>
+);
+
+export const IconFire = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M12 3s5 3.6 5 9a5 5 0 0 1-10 0c0-1.4.5-2.6 1.2-3.4C8.6 10 9 11 10 11c0-2.5.8-6 2-8Z" />
   </Base>
 );
