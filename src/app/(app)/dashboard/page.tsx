@@ -21,7 +21,7 @@ import type { ApplicationStatus } from "@/lib/types";
 
 const STATUS_META: Record<ApplicationStatus, { label: string; chip: string }> = {
   applied: { label: "Applied", chip: "bg-brand-50 text-brand-700" },
-  audition_requested: { label: "Audition requested", chip: "bg-amber-50 text-warn" },
+  audition_requested: { label: "Audition requested", chip: "bg-accent-50 text-warn" },
   finalized: { label: "Finalized", chip: "bg-go-soft text-go" },
   rejected: { label: "Not selected", chip: "bg-canvas text-ink-500" },
 };
@@ -35,11 +35,11 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[100px] leading-none opacity-15">🎯</div>
         <div className="relative">
-          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-[34px]">My Work</h1>
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] sm:text-[56px]">My Work</h1>
           <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Track what you&apos;re applying for, and hire for what you&apos;re making — both live here.
           </p>
@@ -214,7 +214,7 @@ function MyWorkTab() {
       <div className="min-w-0 space-y-4">
         <Card className="anim-rise p-5 sm:p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">
+            <h2 className="eyebrow">
               Auditions tracker
             </h2>
             <Link href="/casting" className="text-[13px] font-semibold text-brand-600 hover:text-brand-700">
@@ -236,7 +236,7 @@ function MyWorkTab() {
                 title="No applications yet"
                 hint="Apply to a casting call and it shows up here with its status."
                 action={
-                  <Link href="/casting" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+                  <Link href="/casting" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500">
                     Find a call
                   </Link>
                 }
@@ -270,7 +270,7 @@ function MyWorkTab() {
                     </span>
                   </div>
                   {a.status === "audition_requested" && a.auditionDate && (
-                    <p className="mt-2.5 flex items-center gap-2 rounded-lg bg-amber-50 px-3.5 py-2.5 text-[13px] font-medium text-warn">
+                    <p className="mt-2.5 flex items-center gap-2 rounded-lg bg-accent-50 px-3.5 py-2.5 text-[13px] font-medium text-warn">
                       <IconClapper size={15} />
                       Audition scheduled: {a.auditionDate} — sides are in your messages.
                     </p>
@@ -292,7 +292,7 @@ function MyWorkTab() {
       <aside>
         <Card className="anim-rise sticky top-20 p-5 sm:p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Calendar</h2>
+            <h2 className="eyebrow">Calendar</h2>
             <button
               onClick={() => setAddingEvent((s) => !s)}
               className="text-[13px] font-semibold text-brand-600 hover:text-brand-700"
@@ -328,7 +328,7 @@ function MyWorkTab() {
               />
               <button
                 type="submit"
-                className="w-full rounded-full bg-brand-600 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-brand-700"
+                className="w-full rounded-full bg-brand-600 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-brand-500"
               >
                 Save event
               </button>
@@ -506,7 +506,7 @@ function StudioTab() {
         </p>
         <button
           onClick={() => setPosting(true)}
-          className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+          className="rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
         >
           + Post a casting call
         </button>
@@ -527,7 +527,7 @@ function StudioTab() {
             title="No listings yet"
             hint="Post your first casting call or job, and applicants will land here."
             action={
-              <button onClick={() => setPosting(true)} className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+              <button onClick={() => setPosting(true)} className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500">
                 Post a casting call
               </button>
             }
@@ -549,7 +549,7 @@ function StudioTab() {
                     <h2 className="text-[16px] font-semibold leading-snug text-ink-900">{l.title}</h2>
                     <span
                       className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
-                        l.requiresAudition ? "bg-amber-50 text-warn" : "bg-canvas text-ink-500"
+                        l.requiresAudition ? "bg-accent-50 text-warn" : "bg-canvas text-ink-500"
                       }`}
                     >
                       {l.requiresAudition ? "Requires audition" : "Direct offer"}
@@ -617,7 +617,7 @@ function StudioTab() {
                               {l.requiresAudition && a.status === "applied" && (
                                 <button
                                   onClick={() => setStatus(l.id, a.person.id, "audition_requested")}
-                                  className="inline-flex items-center gap-1.5 rounded-full border border-warn/40 px-4 py-1.5 text-[13px] font-semibold text-warn transition-colors hover:bg-amber-50"
+                                  className="inline-flex items-center gap-1.5 rounded-full border border-warn/40 px-4 py-1.5 text-[13px] font-semibold text-warn transition-colors hover:bg-accent-50"
                                 >
                                   <IconClapper size={14} /> Request audition
                                 </button>
@@ -662,7 +662,7 @@ function StudioTab() {
       {/* ————— post modal ————— */}
       {posting && (
         <div
-          className="fixed inset-0 z-[200] flex items-end justify-center bg-ink-900/50 p-4 sm:items-center"
+          className="fixed inset-0 z-[200] flex items-end justify-center bg-black/70 backdrop-blur-sm p-4 sm:items-center"
           onClick={() => setPosting(false)}
           role="dialog"
           aria-modal="true"
@@ -800,7 +800,7 @@ function StudioTab() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+                  className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:opacity-60"
                 >
                   {submitting ? "Publishing…" : "Publish listing"}
                 </button>

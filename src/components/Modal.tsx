@@ -41,7 +41,7 @@ export function Modal({
     >
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-ink-900/45 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
         style={{ animation: "backdrop-in 0.2s ease-out both" }}
       />
       <div

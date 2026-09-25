@@ -1,82 +1,94 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { MOCK_SPOTLIGHTS, type Spotlight } from "@/lib/mock";
-import type { MediaTone } from "@/lib/types";
-import { IconPlus } from "./icons";
+import { MOCK_PEOPLE, MOCK_REELS } from "@/lib/mock";
+import { Avatar } from "./Avatar";
+import { IconPlay, IconPlus } from "./icons";
+import { openReels } from "./ReelsViewer";
 
-const TONE_BG: Record<MediaTone, string> = {
-  midnight: "linear-gradient(160deg,#0b1b2b,#123b63)",
-  steel: "linear-gradient(160deg,#2e3d4c,#5b7186)",
-  sky: "linear-gradient(160deg,#0b66c3,#6fa9e0)",
-  noir: "linear-gradient(160deg,#14181d,#2b333d)",
-  porcelain: "linear-gradient(160deg,#8fa6bd,#c7d4e1)",
-  dusk: "linear-gradient(160deg,#1d2947,#46588f)",
-};
-
-const BADGE_STYLE: Record<string, string> = {
-  LIVE: "bg-danger text-white",
-  HOT: "[background:var(--grad-spotlight)] text-white",
-  NEW: "bg-go text-white",
-};
-
-function hrefFor(s: Spotlight): string {
-  if (s.kind === "creator") return "/search";
-  if (s.kind === "call") return "/casting";
-  return "/home";
-}
+const fmt = (n: number) =>
+  n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(n);
 
 export function SpotlightRail() {
-  const router = useRouter();
   return (
-    <div className="anim-rise">
-      <div className="mb-2 flex items-center justify-between px-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-400">Spotlight</p>
-        <span className="text-[11px] font-medium text-ink-400">Swipe →</span>
+    <section className="anim-rise">
+      <div className="mb-3 flex items-end justify-between px-1">
+        <div>
+          <p className="eyebrow">Spotlight</p>
+          <h2 className="font-display text-[22px] font-bold leading-none text-ink-900">
+            Reels <span className="grad-text">right now</span>
+          </h2>
+        </div>
+        <button
+          onClick={() => openReels(0)}
+          className="press rounded-full border border-line-strong px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-ink-700 transition-colors hover:border-volt hover:text-volt"
+        >
+          Watch all ▶
+        </button>
       </div>
-      <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {/* add-your-own */}
+
+      <div className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2">
+        {/* add your own */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("kaledio:open-create"))}
-          className="press group relative flex h-40 w-28 shrink-0 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line-strong bg-paper text-ink-500 transition-colors hover:border-brand-300 hover:text-brand-600"
+          className="press group relative flex aspect-[9/16] w-[128px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-paper text-ink-500 transition-colors hover:border-volt hover:text-volt"
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition-transform group-hover:scale-110">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/[0.06] transition-transform group-hover:scale-110 group-hover:bg-volt group-hover:text-black">
             <IconPlus size={20} />
           </span>
-          <span className="text-[12px] font-semibold">Add yours</span>
+          <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider">Post a reel</span>
         </button>
 
-        {MOCK_SPOTLIGHTS.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => router.push(hrefFor(s))}
-            className="press group relative h-40 w-28 shrink-0 overflow-hidden rounded-2xl text-left shadow-card transition-transform duration-200 hover:-translate-y-1"
-            style={{ background: TONE_BG[s.tone] }}
-          >
-            {/* live/hot ring */}
-            {s.badge && (
-              <span
-                className={`absolute left-2 top-2 z-10 rounded-full px-1.5 py-0.5 text-[9px] font-extrabold tracking-wide ${
-                  BADGE_STYLE[s.badge] ?? "bg-white/90 text-ink-900"
-                }`}
-                style={s.badge === "LIVE" ? { animation: "pulse-dot 1.4s ease-in-out infinite" } : undefined}
-              >
-                {s.badge}
+        {MOCK_REELS.map((r, i) => {
+          const creator = MOCK_PEOPLE.find((p) => p.id === r.creatorId)!;
+          const [c0, c1, c2] = r.palette;
+          return (
+            <button
+              key={r.id}
+              onClick={() => openReels(i)}
+              className="press group relative aspect-[9/16] w-[128px] shrink-0 snap-start overflow-hidden rounded-2xl text-left ring-1 ring-white/10 transition-transform duration-300 hover:-translate-y-1 hover:ring-white/30"
+              style={{ background: c0 }}
+            >
+              {/* live-moving footage preview */}
+              <div
+                className="absolute -inset-[25%]"
+                style={{
+                  background: `radial-gradient(35% 30% at 30% 30%, ${c2} 0%, transparent 65%), radial-gradient(45% 40% at 70% 70%, ${c1} 0%, transparent 70%)`,
+                  animation: `ken-burns ${8 + (i % 3) * 2}s ease-in-out infinite alternate`,
+                }}
+              />
+              <span className="absolute inset-0 flex items-center justify-center text-5xl transition-transform duration-500 group-hover:scale-125">
+                {r.prop}
               </span>
-            )}
-            <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-2.5">
-              <p className="text-[13px] font-bold leading-tight text-white">{s.title}</p>
-              <p className="mt-0.5 text-[11px] font-medium text-white/75">{s.sub}</p>
-            </div>
-            {/* sheen sweep on hover */}
-            <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">
-              <span className="absolute -inset-y-2 -left-1/3 w-1/3 rotate-12 bg-white/20 blur-md" style={{ animation: "sweep 0.9s ease" }} />
-            </span>
-          </button>
-        ))}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/40" />
+
+              {/* badge */}
+              <span
+                className={`absolute left-2 top-2 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider ${
+                  r.kind === "live" ? "bg-danger text-white" : "bg-white/90 text-black"
+                }`}
+                style={r.kind === "live" ? { animation: "pulse-dot 1.4s ease-in-out infinite" } : undefined}
+              >
+                {r.kind === "live" ? "● " : ""}
+                {r.badge}
+              </span>
+
+              {/* hover play */}
+              <span className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 scale-75 items-center justify-center rounded-full bg-white/90 text-black opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+                <IconPlay size={18} className="ml-0.5" />
+              </span>
+
+              <div className="absolute inset-x-0 bottom-0 p-2.5">
+                <p className="line-clamp-2 text-[12.5px] font-bold leading-tight text-white">{r.title}</p>
+                <div className="mt-1.5 flex items-center gap-1.5">
+                  <Avatar name={creator.name} hue={creator.hue} size={16} />
+                  <span className="truncate text-[10.5px] font-medium text-white/80">{creator.name.split(" ")[0]}</span>
+                  <span className="ml-auto font-mono text-[10px] font-bold text-white/90">▶ {fmt(r.likes * 4)}</span>
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 }

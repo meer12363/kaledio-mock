@@ -51,7 +51,7 @@ export default function LoginPage() {
       quote="I booked two features off a profile I set up during a chai break."
       credit="Aanya Sharma — Actor, Mumbai"
     >
-      <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+      <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
         Welcome back
       </h1>
       <p className="mt-2 text-[15px] text-ink-500">
@@ -97,7 +97,7 @@ export default function LoginPage() {
         </Field>
 
         {errors.form && (
-          <p role="alert" className="rounded-lg bg-red-50 px-3.5 py-2.5 text-sm font-medium text-danger">
+          <p role="alert" className="rounded-lg bg-danger/10 px-3.5 py-2.5 text-sm font-medium text-danger">
             {errors.form}
           </p>
         )}
@@ -105,7 +105,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700 disabled:opacity-60"
+          className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500 disabled:opacity-60"
         >
           {submitting ? "Checking the gate list…" : "Log in"}
         </button>

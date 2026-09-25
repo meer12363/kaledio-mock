@@ -26,7 +26,7 @@ export function AuthShell({
       </div>
 
       {/* brand side */}
-      <div className="relative hidden overflow-hidden bg-brand-900 lg:block">
+      <div className="relative hidden overflow-hidden [background:var(--grad-hero)] grad-animate lg:block">
         <div
           className="absolute inset-0"
           style={{ background: "radial-gradient(700px 480px at 20% 10%, rgba(24,120,209,0.4), transparent)" }}

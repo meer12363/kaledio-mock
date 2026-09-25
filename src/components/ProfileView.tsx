@@ -43,23 +43,31 @@ export function ProfileView({
     <div className="mx-auto max-w-4xl space-y-5">
       {/* ————— header ————— */}
       <Card className="anim-rise overflow-hidden">
-        <div
-          className="h-32 sm:h-40"
-          style={{
-            background: `linear-gradient(115deg, ${tone.bg} 0%, #0b66c3 130%)`,
-          }}
-        />
+        <div className="relative h-40 overflow-hidden sm:h-52">
+          <div className="absolute inset-0 opacity-90" style={{ background: tone.bg }} />
+          <div className="absolute inset-0 [background:var(--grad-hero)] opacity-70 mix-blend-multiply" />
+          <div className="absolute inset-0 opacity-60 [background:var(--grad-mesh)]" />
+          {/* giant ghosted name — poster style */}
+          <p className="pointer-events-none absolute -bottom-6 left-4 select-none whitespace-nowrap font-display text-[96px] font-extrabold leading-none text-white/10 sm:text-[140px]">
+            {profile.name.split(" ")[0]}
+          </p>
+          <span className="absolute right-4 top-4 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur">
+            {profile.roles[0] ?? "Member"} · {profile.location}
+          </span>
+        </div>
         <div className="px-5 pb-6 sm:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="-mt-12 sm:-mt-14">
-              <Avatar name={profile.name} hue={profile.hue} size={104} ring src={avatarSrc} />
+            <div className="-mt-14 sm:-mt-16">
+              <span className="inline-block rounded-full p-1 [background:var(--grad-spotlight)]">
+                <Avatar name={profile.name} hue={profile.hue} size={112} src={avatarSrc} />
+              </span>
             </div>
             {actions && <div className="flex flex-wrap gap-2 pt-3">{actions}</div>}
           </div>
 
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h1 className="text-2xl font-bold tracking-tight text-ink-900">{profile.name}</h1>
+              <h1 className="font-display text-[34px] font-extrabold leading-none text-ink-900 sm:text-[42px]">{profile.name}</h1>
               <AvailabilityBadge status={profile.availability} />
             </div>
             <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-ink-600">{profile.headline}</p>
@@ -91,7 +99,7 @@ export function ProfileView({
         <div className="min-w-0 space-y-5">
           {/* about */}
           <Card className="anim-rise p-6 sm:p-7">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">About</h2>
+            <h2 className="eyebrow">About</h2>
             <p className="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-ink-800">{profile.bio}</p>
             {aboutExtra}
           </Card>
@@ -100,7 +108,7 @@ export function ProfileView({
           {profile.reelTitle && (
             <Card className="anim-rise p-6 sm:p-7">
               <div className="flex items-baseline justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Showreel</h2>
+                <h2 className="eyebrow">Showreel</h2>
                 <span className="text-xs font-medium text-ink-400">
                   {profile.reelTitle} · {profile.reelDuration}
                 </span>
@@ -118,7 +126,7 @@ export function ProfileView({
           {/* experience */}
           {profile.credits.length > 0 && (
             <Card className="anim-rise p-6 sm:p-7">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Experience</h2>
+              <h2 className="eyebrow">Experience</h2>
               <ol className="mt-4 space-y-0">
                 {credits.map((c, i) => (
                   <li key={c.id} className={`flex gap-4 ${i > 0 ? "mt-5 border-t border-line pt-5" : ""}`}>
@@ -149,7 +157,7 @@ export function ProfileView({
           {/* portfolio */}
           {profile.portfolio.length > 0 && (
             <Card className="anim-rise p-6 sm:p-7">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Portfolio</h2>
+              <h2 className="eyebrow">Portfolio</h2>
               <div className="mt-4 columns-2 gap-3.5 [&>*]:mb-3.5 sm:columns-3">
                 {profile.portfolio.map((item) => (
                   <div key={item.id} className="break-inside-avoid transition-transform duration-200 hover:scale-[1.015]">
@@ -165,7 +173,7 @@ export function ProfileView({
         <aside className="space-y-5">
           {profile.skills.length > 0 && (
             <Card className="anim-rise p-5">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Skills</h2>
+              <h2 className="eyebrow">Skills</h2>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {profile.skills.map((s) => (
                   <Tag key={s}>{s}</Tag>
@@ -174,7 +182,7 @@ export function ProfileView({
             </Card>
           )}
           <Card className="anim-rise p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Details</h2>
+            <h2 className="eyebrow">Details</h2>
             <dl className="mt-3 space-y-3 text-sm">
               <div>
                 <dt className="text-xs font-medium text-ink-400">Based in</dt>
@@ -200,7 +208,7 @@ export function MessageButton({ onClick, name }: { onClick: () => void; name: st
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+      className="flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
     >
       <IconChat size={16} /> Message {name.split(" ")[0]}
     </button>

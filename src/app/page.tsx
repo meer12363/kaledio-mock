@@ -73,7 +73,7 @@ export default function LandingPage() {
             {ready && user ? (
               <button
                 onClick={goFeed}
-                className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-brand-700"
+                className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-brand-500"
               >
                 Open your feed
               </button>
@@ -87,7 +87,7 @@ export default function LandingPage() {
                 </button>
                 <button
                   onClick={goJoin}
-                  className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-brand-700"
+                  className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-brand-500"
                 >
                   Join Kaledio
                 </button>
@@ -115,7 +115,7 @@ export default function LandingPage() {
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <button
               onClick={goJoin}
-              className="group inline-flex items-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 text-[15px] font-semibold text-white shadow-pop transition-all duration-200 hover:bg-brand-700"
+              className="group inline-flex items-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 text-[15px] font-semibold text-white shadow-pop transition-all duration-200 hover:bg-brand-500"
             >
               Create your profile
               <IconArrowRight size={17} className="transition-transform duration-200 group-hover:translate-x-0.5" />

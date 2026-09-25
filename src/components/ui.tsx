@@ -50,16 +50,16 @@ export function Chip({
   const Comp = onClick ? "button" : "span";
   const activeCls =
     tone === "accent"
-      ? "border-accent-500 bg-accent-500 text-white shadow-glow-accent"
-      : "border-brand-600 bg-brand-600 text-white shadow-glow";
+      ? "border-volt bg-volt text-black shadow-glow-volt"
+      : "border-ink-900 bg-ink-900 text-canvas";
   return (
     <Comp
       onClick={onClick}
-      className={`inline-flex items-center rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200 press ${
+      className={`inline-flex items-center rounded-xl border px-3.5 py-1.5 text-[13px] font-semibold transition-all duration-200 press ${
         active
           ? activeCls
-          : "border-line bg-paper text-ink-600 " +
-            (onClick ? "hover:border-brand-300 hover:text-brand-700 hover:-translate-y-0.5" : "")
+          : "border-line-strong bg-paper text-ink-600 " +
+            (onClick ? "hover:border-ink-400 hover:text-ink-900 hover:-translate-y-0.5" : "")
       }`}
     >
       {children}
@@ -69,7 +69,7 @@ export function Chip({
 
 export function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-md bg-canvas px-2 py-0.5 text-xs font-medium text-ink-600 transition-colors hover:bg-brand-50 hover:text-brand-700">
+    <span className="inline-flex items-center rounded-md border border-line bg-white/[0.03] px-2 py-0.5 text-xs font-medium text-ink-600 transition-colors hover:border-ink-400 hover:text-ink-900">
       {children}
     </span>
   );
@@ -90,8 +90,8 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-2xl border border-line bg-paper shadow-card ${
-        interactive ? "hover-lift hover:border-brand-200" : ""
+      className={`rounded-3xl border border-line bg-paper shadow-card ${
+        interactive ? "hover-lift hover:border-white/15" : ""
       } ${glow ? "shadow-lift" : ""} ${className}`}
     >
       {children}
@@ -102,13 +102,10 @@ export function Card({
 type ButtonVariant = "primary" | "accent" | "ghost" | "outline";
 
 const BTN_VARIANTS: Record<ButtonVariant, string> = {
-  primary:
-    "bg-brand-600 text-white hover:bg-brand-700 shadow-sm hover:shadow-glow",
-  accent:
-    "text-white shadow-sm hover:shadow-glow-accent [background:var(--grad-spotlight)]",
-  ghost: "text-ink-600 hover:bg-canvas hover:text-ink-900",
-  outline:
-    "border border-line-strong bg-paper text-ink-700 hover:border-brand-300 hover:text-brand-700",
+  primary: "bg-ink-900 text-canvas hover:bg-white shadow-sm",
+  accent: "text-black font-bold hover:shadow-glow-accent [background:var(--grad-spotlight)]",
+  ghost: "text-ink-600 hover:bg-white/[0.05] hover:text-ink-900",
+  outline: "border border-line-strong bg-transparent text-ink-800 hover:border-ink-400 hover:text-ink-900",
 };
 
 export function Button({
@@ -125,7 +122,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`press sheen inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none ${BTN_VARIANTS[variant]} ${className}`}
+      className={`press sheen inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none ${BTN_VARIANTS[variant]} ${className}`}
       {...rest}
     >
       {children}

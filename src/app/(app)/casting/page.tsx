@@ -31,12 +31,12 @@ const MEDIUMS = ["All", "Feature Film", "OTT Series", "TV Series", "Ad Film", "M
 const LOCATIONS = ["All", "Mumbai", "Delhi", "Hyderabad", "Chennai", "Goa", "London", "Berlin", "Remote"];
 
 const ACCENT: Record<MediaTone, string> = {
-  midnight: "from-brand-900 to-brand-600",
-  steel: "from-slate-600 to-slate-400",
-  sky: "from-brand-500 to-brand-300",
-  noir: "from-ink-900 to-ink-600",
-  porcelain: "from-brand-300 to-brand-100",
-  dusk: "from-pop-700 to-brand-500",
+  midnight: "from-[#070b24] to-[#2b2a8f]",
+  steel: "from-[#03161f] to-[#0e6b73]",
+  sky: "from-[#061a3d] to-[#2f7fe6]",
+  noir: "from-black to-[#3a2a1c]",
+  porcelain: "from-[#2a0f1f] to-[#c9557a]",
+  dusk: "from-[#1a0620] to-[#b8327a]",
 };
 
 function fromMock(c: MockCall): CardData {
@@ -137,14 +137,14 @@ export default function CastingBoardPage() {
   return (
     <div className="mx-auto max-w-5xl">
       {/* hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate sm:p-7">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate sm:p-7">
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[110px] leading-none opacity-15">🎭</div>
         <div className="relative">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold backdrop-blur">
             <IconFire size={13} /> {totalRoles} roles casting now
           </span>
-          <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-[34px]">Casting board</h1>
+          <h1 className="mt-3 font-display text-[40px] font-extrabold leading-[0.95] sm:text-[56px]">Casting board</h1>
           <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Live roles across film, OTT, ad film, music video and theatre. Apply in one tap — new calls drop daily.
           </p>
@@ -219,7 +219,7 @@ export default function CastingBoardPage() {
                   <div className="absolute inset-0 opacity-30 [background:var(--grad-mesh)]" />
                   <div className="absolute left-4 top-3 flex gap-1.5">
                     {c.hot && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-extrabold text-accent-700">
+                      <span className="inline-flex items-center gap-1 rounded-md bg-volt px-2 py-0.5 font-mono text-[10px] font-bold text-black">
                         <IconFire size={11} /> HOT
                       </span>
                     )}

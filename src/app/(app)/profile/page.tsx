@@ -145,7 +145,7 @@ export default function MyProfilePage() {
             </select>
             <Link
               href="/profile/edit"
-              className="flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+              className="flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
             >
               <IconEdit size={15} /> Edit profile
             </Link>
@@ -169,7 +169,7 @@ export default function MyProfilePage() {
         {hasRegistrationInfo && (
           <Card className="anim-rise p-6 sm:p-7">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">
+              <h2 className="eyebrow">
                 {isCompany ? "Company details" : "Personal details"}
               </h2>
               <Link href="/profile/edit" className="text-[13px] font-semibold text-brand-600 hover:text-brand-700">
@@ -245,7 +245,7 @@ export default function MyProfilePage() {
         {d.gallery.length > 0 && (
           <Card className="anim-rise p-6 sm:p-7">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Photo gallery</h2>
+              <h2 className="eyebrow">Photo gallery</h2>
               <Link href="/profile/edit" className="text-[13px] font-semibold text-brand-600 hover:text-brand-700">
                 Manage
               </Link>

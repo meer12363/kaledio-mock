@@ -129,7 +129,7 @@ export default function CastingDetailPage() {
         <p className="mt-2 text-sm text-ink-500">It may have closed or been withdrawn.</p>
         <Link
           href="/casting"
-          className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
+          className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-500"
         >
           Back to the board
         </Link>
@@ -154,7 +154,7 @@ export default function CastingDetailPage() {
               <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">{call.medium}</span>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  call.requiresAudition ? "bg-amber-50 text-warn" : "bg-canvas text-ink-500"
+                  call.requiresAudition ? "bg-accent-50 text-warn" : "bg-canvas text-ink-500"
                 }`}
               >
                 {call.requiresAudition ? "Requires audition" : "Direct offer"}
@@ -193,10 +193,10 @@ export default function CastingDetailPage() {
           </Card>
 
           <Card className="anim-rise p-6 sm:p-7">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">The brief</h2>
+            <h2 className="eyebrow">The brief</h2>
             <p className="mt-3 whitespace-pre-line text-[15px] leading-relaxed text-ink-800">{call.description}</p>
 
-            <h2 className="mt-8 text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Looking for</h2>
+            <h2 className="mt-8 eyebrow">Looking for</h2>
             <ul className="mt-3 space-y-3">
               {call.lookingFor.map((r) => (
                 <li key={r.name} className="rounded-xl border border-line bg-canvas/70 p-4">
@@ -206,7 +206,7 @@ export default function CastingDetailPage() {
               ))}
             </ul>
 
-            <h2 className="mt-8 text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">To apply you&apos;ll need</h2>
+            <h2 className="mt-8 eyebrow">To apply you&apos;ll need</h2>
             <ul className="mt-3 space-y-2.5">
               {call.requirements.map((r) => (
                 <li key={r} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-ink-700">
@@ -252,7 +252,7 @@ export default function CastingDetailPage() {
               ) : (
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="mt-4 w-full rounded-full bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+                  className="mt-4 w-full rounded-full bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
                 >
                   Apply now
                 </button>
@@ -285,7 +285,7 @@ export default function CastingDetailPage() {
             </Card>
 
             <Card className="p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-400">A note on self-tapes</p>
+              <p className="eyebrow">A note on self-tapes</p>
               <p className="mt-2 text-[13px] leading-relaxed text-ink-600">
                 Natural light, clean sound, slate your name and height. Casting watches the first eight seconds — make them count.
               </p>
@@ -297,7 +297,7 @@ export default function CastingDetailPage() {
       {/* apply modal */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-[200] flex items-end justify-center bg-ink-900/50 p-4 sm:items-center"
+          className="fixed inset-0 z-[200] flex items-end justify-center bg-black/70 backdrop-blur-sm p-4 sm:items-center"
           onClick={() => setModalOpen(false)}
           role="dialog"
           aria-modal="true"
@@ -358,7 +358,7 @@ export default function CastingDetailPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+                  className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:opacity-60"
                 >
                   {submitting ? "Sending…" : "Send application"}
                 </button>

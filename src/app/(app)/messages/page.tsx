@@ -386,7 +386,7 @@ function MessagesInner() {
                         }`}
                       >
                         <p>{msg.text}</p>
-                        <p className={`mt-1 text-[10.5px] ${msg.from === "me" ? "text-brand-100" : "text-ink-400"}`}>
+                        <p className={`mt-1 text-[10.5px] ${msg.from === "me" ? "text-white/70" : "text-ink-400"}`}>
                           {msg.time}
                         </p>
                       </div>
@@ -419,7 +419,7 @@ function MessagesInner() {
                     type="submit"
                     disabled={!draft.trim()}
                     aria-label="Send message"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-all duration-150 hover:bg-brand-700 active:scale-95 disabled:opacity-40"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-all duration-150 hover:bg-brand-500 active:scale-95 disabled:opacity-40"
                   >
                     <IconSend size={16} />
                   </button>

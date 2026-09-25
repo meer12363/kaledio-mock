@@ -15,7 +15,7 @@ export interface CalendarEvent {
 
 export const EVENT_META: Record<CalendarEventKind, { label: string; dot: string; chip: string }> = {
   audition: { label: "Audition", dot: "bg-brand-600", chip: "bg-brand-50 text-brand-700" },
-  deadline: { label: "Deadline", dot: "bg-warn", chip: "bg-amber-50 text-warn" },
+  deadline: { label: "Deadline", dot: "bg-warn", chip: "bg-accent-50 text-warn" },
   shoot: { label: "Shoot / rehearsal", dot: "bg-go", chip: "bg-go-soft text-go" },
   custom: { label: "Your event", dot: "bg-ink-500", chip: "bg-canvas text-ink-600" },
 };
@@ -148,7 +148,7 @@ export function CalendarView({
       </div>
 
       <div className="mt-5">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-400">Coming up</h3>
+        <h3 className="eyebrow">Coming up</h3>
         {upcoming.length === 0 ? (
           <p className="mt-2.5 text-sm text-ink-400">Nothing on the calendar yet — go tape something.</p>
         ) : (

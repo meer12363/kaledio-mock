@@ -210,7 +210,7 @@ export function PostCard({ post }: { post: FeedPost }) {
 
       {post.mediaUrl && (
         <div className="px-4 pb-4 sm:px-5">
-          <div className="overflow-hidden rounded-lg bg-ink-900">
+          <div className="overflow-hidden rounded-xl bg-black">
             {post.mediaType === "video" ? (
               <video src={post.mediaUrl} controls className="max-h-[480px] w-full" />
             ) : (
@@ -376,7 +376,7 @@ export function PostCard({ post }: { post: FeedPost }) {
               type="submit"
               disabled={!draft.trim()}
               aria-label="Post comment"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-700 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-500 disabled:opacity-40"
             >
               <IconSend size={15} />
             </button>

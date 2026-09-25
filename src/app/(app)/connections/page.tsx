@@ -95,11 +95,11 @@ export default function ConnectionsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[100px] leading-none opacity-15">🤝</div>
         <div className="relative">
-          <h1 className="font-display text-3xl font-semibold tracking-tight">Your network</h1>
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] sm:text-[52px]">Your network</h1>
           <p className="mt-1.5 text-[14px] text-white/85">
             {connections?.length ?? 0} connections · {incoming?.length ?? 0} new requests waiting
           </p>
@@ -133,7 +133,7 @@ export default function ConnectionsPage() {
                 title="No connections yet"
                 hint="Send a request from anyone's profile or search results to start building your network."
                 action={
-                  <Link href="/search" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+                  <Link href="/search" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500">
                     Find people
                   </Link>
                 }
@@ -186,7 +186,7 @@ export default function ConnectionsPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => respond(r.id, true)}
-                    className="flex items-center gap-1.5 rounded-full bg-brand-600 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-brand-700"
+                    className="flex items-center gap-1.5 rounded-full bg-brand-600 px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-brand-500"
                   >
                     <IconCheck size={14} /> Accept
                   </button>
@@ -210,7 +210,7 @@ export default function ConnectionsPage() {
                 title="Nothing pending"
                 hint="Requests you've sent that haven't been answered yet will show up here."
                 action={
-                  <Link href="/search" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+                  <Link href="/search" className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500">
                     <IconUsers size={14} className="mr-1.5 inline" /> Find people
                   </Link>
                 }

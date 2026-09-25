@@ -72,7 +72,7 @@ export default function MemberProfilePage() {
         <p className="mt-2 text-sm text-ink-500">It may have been removed, or the link is off by a frame.</p>
         <Link
           href="/search"
-          className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
+          className="mt-6 inline-block rounded-full bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-500"
         >
           Back to search
         </Link>

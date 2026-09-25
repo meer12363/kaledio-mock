@@ -53,7 +53,7 @@ function Section({
 }) {
   return (
     <Card className="p-6 sm:p-7">
-      <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">{title}</h2>
+      <h2 className="eyebrow">{title}</h2>
       {hint && <p className="mt-1.5 text-[13px] text-ink-500">{hint}</p>}
       <div className="mt-5 grid gap-5 sm:grid-cols-2">{children}</div>
     </Card>
@@ -167,7 +167,7 @@ export default function ProfileEditPage() {
 
       <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             Edit {isCompany ? "company profile" : "profile"}
           </h1>
           <p className="mt-1 text-[15px] text-ink-500">
@@ -326,7 +326,7 @@ export default function ProfileEditPage() {
 
         {/* ————— target audience ————— */}
         <Card className="p-6 sm:p-7">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Target Audience</h2>
+          <h2 className="eyebrow">Target Audience</h2>
           <p className="mt-1.5 text-[13px] text-ink-500">
             {isCompany
               ? "The audiences your work is made for."
@@ -361,7 +361,7 @@ export default function ProfileEditPage() {
 
         {/* ————— media ————— */}
         <Card className="p-6 sm:p-7">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-ink-400">Media & documents</h2>
+          <h2 className="eyebrow">Media & documents</h2>
 
           <div className="mt-5 flex items-center gap-5">
             <Avatar name={user.name} hue={3} size={72} src={d.profilePicture || undefined} />
@@ -414,7 +414,7 @@ export default function ProfileEditPage() {
                       type="button"
                       onClick={() => setD((prev) => (prev ? { ...prev, gallery: prev.gallery.filter((_, j) => j !== i) } : prev))}
                       aria-label={`Remove item ${i + 1}`}
-                      className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-ink-900/70 text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                      className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                     >
                       <IconX size={13} />
                     </button>
@@ -462,7 +462,7 @@ export default function ProfileEditPage() {
         </Card>
 
         {saveError && (
-          <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-danger">
+          <p role="alert" className="rounded-lg bg-danger/10 px-4 py-3 text-sm font-medium text-danger">
             {saveError}
           </p>
         )}
@@ -474,7 +474,7 @@ export default function ProfileEditPage() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-full bg-brand-600 px-7 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+            className="rounded-full bg-brand-600 px-7 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:opacity-60"
           >
             {saving ? "Saving…" : "Save profile"}
           </button>
@@ -482,7 +482,7 @@ export default function ProfileEditPage() {
       </form>
 
       {saved && (
-        <div role="status" aria-live="polite" className="anim-rise fixed bottom-6 left-1/2 z-[300] flex -translate-x-1/2 items-center gap-2 rounded-full bg-ink-900 px-5 py-2.5 text-sm font-medium text-white shadow-pop">
+        <div role="status" aria-live="polite" className="anim-rise fixed bottom-6 left-1/2 z-[300] flex -translate-x-1/2 items-center gap-2 rounded-full border border-line-strong bg-elevated px-5 py-2.5 text-sm font-medium text-ink-900 shadow-pop">
           <IconCheck size={15} className="text-go" /> Profile saved
         </div>
       )}

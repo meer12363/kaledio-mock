@@ -1,18 +1,19 @@
+// jewel-tone gradients that read well on the dark canvas
 const TONES: Array<{ bg: string; fg: string }> = [
-  { bg: "#0c3157", fg: "#d9e9f8" },
-  { bg: "#dce7f2", fg: "#08519d" },
-  { bg: "#10161c", fg: "#e4e9ee" },
-  { bg: "#b3d3f1", fg: "#0a4076" },
-  { bg: "#2c3844", fg: "#d3dae1" },
-  { bg: "#eef2f6", fg: "#2c3844" },
-  { bg: "#08519d", fg: "#d9e9f8" },
-  { bg: "#1b2a3a", fg: "#b3d3f1" },
-  { bg: "#e7eef6", fg: "#0c3157" },
-  { bg: "#0b66c3", fg: "#eef5fc" },
-  { bg: "#33465c", fg: "#d9e9f8" },
-  { bg: "#cfdded", fg: "#10314f" },
-  { bg: "#122336", fg: "#7fb4e6" },
-  { bg: "#4a5560", fg: "#eef2f6" },
+  { bg: "linear-gradient(135deg,#ff9410,#ff4f7b)", fg: "#1a0a02" },
+  { bg: "linear-gradient(135deg,#3d8ef0,#8a2bd6)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#3ddc97,#1e7fbf)", fg: "#03140d" },
+  { bg: "linear-gradient(135deg,#d7ff3a,#3ddc97)", fg: "#0f1402" },
+  { bg: "linear-gradient(135deg,#c94ad8,#ff4f7b)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#ffd1a3,#ff7a3d)", fg: "#2a1204" },
+  { bg: "linear-gradient(135deg,#1e4fbf,#3ddcd1)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#ffb13b,#d7ff3a)", fg: "#1a1402" },
+  { bg: "linear-gradient(135deg,#6a1b9a,#c94ad8)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#ff5a64,#ff9410)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#2b333d,#6c7480)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#7ab5f5,#e086ec)", fg: "#0c0a1f" },
+  { bg: "linear-gradient(135deg,#0e4c7a,#3ddc97)", fg: "#ffffff" },
+  { bg: "linear-gradient(135deg,#a1227e,#ff9410)", fg: "#ffffff" },
 ];
 
 export function initialsOf(name: string): string {

@@ -117,11 +117,11 @@ export default function SearchPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-cool)] grad-animate sm:p-7">
+      <div className="relative overflow-hidden rounded-[28px] border border-white/10 p-6 text-white shadow-lift [background:var(--grad-cool)] grad-animate sm:p-7">
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[110px] leading-none opacity-15">🔍</div>
         <div className="relative">
-          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-[34px]">Find people</h1>
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] sm:text-[56px]">Find people</h1>
           <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Talent, creatives and production — searchable by role, city and experience.
           </p>
@@ -230,7 +230,7 @@ export default function SearchPage() {
                     setMinYears(0);
                     setOpenOnly(false);
                   }}
-                  className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+                  className="rounded-full bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-500"
                 >
                   Reset search
                 </button>
@@ -273,7 +273,7 @@ export default function SearchPage() {
               <div className="mt-4 flex flex-wrap gap-2 border-t border-line pt-4">
                 <Link
                   href={`/profile/${p.id}`}
-                  className="flex-1 rounded-full bg-brand-600 py-2 text-center text-[13px] font-semibold text-white transition-colors hover:bg-brand-700"
+                  className="flex-1 rounded-full bg-brand-600 py-2 text-center text-[13px] font-semibold text-white transition-colors hover:bg-brand-500"
                 >
                   View profile
                 </Link>

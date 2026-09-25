@@ -126,7 +126,7 @@ export default function OnboardingPage() {
 
       {step === 0 && (
         <>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             Welcome to Kaledio
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">
@@ -171,7 +171,7 @@ export default function OnboardingPage() {
             <button
               type="submit"
               disabled={!regType}
-              className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700 disabled:opacity-50"
+              className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500 disabled:opacity-50"
             >
               Continue
             </button>
@@ -184,7 +184,7 @@ export default function OnboardingPage() {
           <button onClick={() => setStep(0)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800">
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             Which side of the camera are you on?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">You can post AND apply either way — this just tailors your dashboard.</p>
@@ -221,7 +221,7 @@ export default function OnboardingPage() {
           <button onClick={() => setStep(1)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800">
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             What {isCompany ? "does your company do" : "do you do"}?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">Pick everything that applies.</p>
@@ -258,12 +258,12 @@ export default function OnboardingPage() {
             </Field>
           </div>
 
-          {error && <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3.5 py-2.5 text-sm font-medium text-danger">{error}</p>}
+          {error && <p role="alert" className="mt-4 rounded-lg bg-danger/10 px-3.5 py-2.5 text-sm font-medium text-danger">{error}</p>}
 
           <button
             onClick={finish}
             disabled={submitting}
-            className="mt-8 w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700 disabled:opacity-60"
+            className="mt-8 w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500 disabled:opacity-60"
           >
             {submitting ? "Printing your pass…" : "Enter Kaledio"}
           </button>

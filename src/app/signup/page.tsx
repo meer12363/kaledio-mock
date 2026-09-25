@@ -149,7 +149,7 @@ export default function SignupPage() {
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-600">
           <IconMail size={22} />
         </span>
-        <h1 className="mt-5 font-display text-3xl font-medium tracking-tight text-ink-900">
+        <h1 className="mt-5 font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
           Check your email
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-ink-500">
@@ -158,7 +158,7 @@ export default function SignupPage() {
         </p>
         <Link
           href="/login"
-          className="mt-8 block w-full rounded-full bg-brand-600 py-3 text-center text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700"
+          className="mt-8 block w-full rounded-full bg-brand-600 py-3 text-center text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500"
         >
           Go to login
         </Link>
@@ -188,7 +188,7 @@ export default function SignupPage() {
 
       {step === 0 && (
         <>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             Who&apos;s joining Kaledio?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">
@@ -234,7 +234,7 @@ export default function SignupPage() {
           >
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             {isCompany ? "Put your company on the map" : "Claim your place on the call sheet"}
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">Takes about two minutes.</p>
@@ -271,7 +271,7 @@ export default function SignupPage() {
             </Field>
             <button
               type="submit"
-              className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700"
+              className="w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500"
             >
               Continue
             </button>
@@ -287,7 +287,7 @@ export default function SignupPage() {
           >
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             Which side of the camera are you on?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">
@@ -325,7 +325,7 @@ export default function SignupPage() {
           >
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">
+          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
             What {isCompany ? "does your company do" : `do you do${name ? `, ${name.trim().split(" ")[0]}` : ""}`}?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">Pick everything that applies.</p>
@@ -367,7 +367,7 @@ export default function SignupPage() {
           </div>
 
           {finishError && (
-            <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3.5 py-2.5 text-sm font-medium text-danger">
+            <p role="alert" className="mt-4 rounded-lg bg-danger/10 px-3.5 py-2.5 text-sm font-medium text-danger">
               {finishError}
             </p>
           )}
@@ -375,7 +375,7 @@ export default function SignupPage() {
           <button
             onClick={finish}
             disabled={submitting}
-            className="mt-8 w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-700 disabled:opacity-60"
+            className="mt-8 w-full rounded-full bg-brand-600 py-3 text-[15px] font-semibold text-white transition-colors duration-150 hover:bg-brand-500 disabled:opacity-60"
           >
             {submitting ? "Printing your pass…" : "Create my profile"}
           </button>

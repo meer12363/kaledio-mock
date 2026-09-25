@@ -6,12 +6,12 @@ import { IconPause, IconPlay } from "./icons";
 import { CameraMark } from "./Logo";
 
 const TONE_GRADIENTS: Record<MediaTone, { from: string; to: string; text: string; dim: string }> = {
-  midnight: { from: "#0b1b2b", to: "#123b63", text: "#d9e9f8", dim: "rgba(217,233,248,0.55)" },
-  steel: { from: "#2e3d4c", to: "#5b7186", text: "#e8edf2", dim: "rgba(232,237,242,0.55)" },
-  sky: { from: "#0b66c3", to: "#6fa9e0", text: "#eef5fc", dim: "rgba(238,245,252,0.6)" },
-  noir: { from: "#14181d", to: "#2b333d", text: "#c9d2db", dim: "rgba(201,210,219,0.5)" },
-  porcelain: { from: "#e9eef4", to: "#c7d4e1", text: "#2c3844", dim: "rgba(44,56,68,0.55)" },
-  dusk: { from: "#1d2947", to: "#46588f", text: "#dde4f8", dim: "rgba(221,228,248,0.55)" },
+  midnight: { from: "#070b24", to: "#2b2a8f", text: "#e4e6ff", dim: "rgba(228,230,255,0.6)" },
+  steel: { from: "#03161f", to: "#0e6b73", text: "#dffbf7", dim: "rgba(223,251,247,0.6)" },
+  sky: { from: "#061a3d", to: "#2f7fe6", text: "#eef5fc", dim: "rgba(238,245,252,0.62)" },
+  noir: { from: "#08080a", to: "#3a2a1c", text: "#f3e6d6", dim: "rgba(243,230,214,0.55)" },
+  porcelain: { from: "#2a0f1f", to: "#c9557a", text: "#fff0f5", dim: "rgba(255,240,245,0.65)" },
+  dusk: { from: "#1a0620", to: "#b8327a", text: "#ffe6f2", dim: "rgba(255,230,242,0.62)" },
 };
 
 const ASPECTS = { wide: "16 / 9", tall: "4 / 5", square: "1 / 1" } as const;
@@ -166,7 +166,7 @@ export function ShowreelPlayer({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-ink-900" style={{ aspectRatio: "16 / 9" }}>
+    <div className="relative overflow-hidden rounded-xl bg-black" style={{ aspectRatio: "16 / 9" }}>
       {/* scene layers */}
       {REEL_SCENES.map((tone, i) => {
         const g = TONE_GRADIENTS[tone];
