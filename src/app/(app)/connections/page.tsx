@@ -7,6 +7,7 @@ import { Avatar } from "@/components/Avatar";
 import { Card, EmptyState, Skeleton, Tag } from "@/components/ui";
 import { IconCheck, IconChat, IconUsers, IconX } from "@/components/icons";
 import { gql } from "@/lib/gql";
+import { MOCK_PEOPLE } from "@/lib/mock";
 
 interface PersonRow {
   id: string;
@@ -26,6 +27,17 @@ interface RequestRow {
 
 const PERSON_ROW_FIELDS = `id name headline location roles hue avatarUrl`;
 
+const toRow = (i: number): PersonRow => {
+  const p = MOCK_PEOPLE[i];
+  return { id: p.id, name: p.name, headline: p.headline, location: p.location, roles: p.roles, hue: p.hue, avatarUrl: "" };
+};
+const MOCK_CONNECTIONS: PersonRow[] = [0, 1, 3, 6, 8, 11].map(toRow);
+const MOCK_INCOMING: RequestRow[] = [
+  { id: "mock-req-1", sentAgo: "2h ago", person: toRow(2) },
+  { id: "mock-req-2", sentAgo: "1d ago", person: toRow(9) },
+];
+const MOCK_OUTGOING: RequestRow[] = [{ id: "mock-out-1", sentAgo: "3d ago", person: toRow(5) }];
+
 type Tab = "connections" | "incoming" | "outgoing";
 
 export default function ConnectionsPage() {
@@ -44,14 +56,15 @@ export default function ConnectionsPage() {
       }`
     )
       .then((d) => {
-        setConnections(d.connections);
-        setIncoming(d.incomingConnectionRequests);
-        setOutgoing(d.outgoingConnectionRequests);
+        const seen = new Set(d.connections.map((p) => p.id));
+        setConnections([...d.connections, ...MOCK_CONNECTIONS.filter((m) => !seen.has(m.id))]);
+        setIncoming([...d.incomingConnectionRequests, ...MOCK_INCOMING]);
+        setOutgoing([...d.outgoingConnectionRequests, ...MOCK_OUTGOING]);
       })
       .catch(() => {
-        setConnections([]);
-        setIncoming([]);
-        setOutgoing([]);
+        setConnections(MOCK_CONNECTIONS);
+        setIncoming(MOCK_INCOMING);
+        setOutgoing(MOCK_OUTGOING);
       });
   };
 
@@ -69,7 +82,9 @@ export default function ConnectionsPage() {
     gql<{ startConversation: { id: string } }>(
       `mutation($personId: ID!) { startConversation(personId: $personId) { id } }`,
       { personId }
-    ).then((d) => router.push(`/messages?c=${d.startConversation.id}`));
+    )
+      .then((d) => router.push(`/messages?c=${d.startConversation.id}`))
+      .catch(() => router.push("/messages"));
   };
 
   const tabs: Array<{ id: Tab; label: string; count?: number }> = [
@@ -80,10 +95,18 @@ export default function ConnectionsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">Connections</h1>
-      <p className="mt-1 text-[15px] text-ink-500">Your network on Kaledio — separate from messaging.</p>
+      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
+        <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
+        <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[100px] leading-none opacity-15">🤝</div>
+        <div className="relative">
+          <h1 className="font-display text-3xl font-semibold tracking-tight">Your network</h1>
+          <p className="mt-1.5 text-[14px] text-white/85">
+            {connections?.length ?? 0} connections · {incoming?.length ?? 0} new requests waiting
+          </p>
+        </div>
+      </div>
 
-      <div className="mt-6 flex gap-1 border-b border-line">
+      <div className="mt-5 flex gap-1 border-b border-line">
         {tabs.map((t) => (
           <button
             key={t.id}

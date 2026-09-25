@@ -7,6 +7,7 @@ import { Avatar } from "@/components/Avatar";
 import { Card, Skeleton } from "@/components/ui";
 import { IconArrowLeft, IconSearch, IconSend, IconX } from "@/components/icons";
 import { gql } from "@/lib/gql";
+import { MOCK_PEOPLE } from "@/lib/mock";
 import type { Message } from "@/lib/types";
 
 interface Thread {
@@ -24,6 +25,41 @@ interface PersonHit {
   hue: number;
   avatarUrl: string;
 }
+
+const mkThread = (personIdx: number, unread: number, lastActive: string, msgs: Array<[Message["from"], string, string]>): Thread => {
+  const p = MOCK_PEOPLE[personIdx];
+  return {
+    id: `mock-conv-${p.id}`,
+    unread,
+    lastActive,
+    person: { id: p.id, name: p.name, headline: p.headline, hue: p.hue, location: p.location, avatarUrl: "" },
+    messages: msgs.map(([from, text, time], i) => ({ id: `mm-${p.id}-${i}`, from, text, time })),
+  };
+};
+
+const MOCK_THREADS: Thread[] = [
+  mkThread(2, 2, "12m", [
+    ["them", "Hi! Saw your profile on the Saltwater S3 search — your self-tape setup looks solid.", "Tue 4:12 PM"],
+    ["me", "Thank you Ritika! Would love to read for it.", "Tue 4:30 PM"],
+    ["them", "Sending sides tonight. Tape by Friday if you can 🎬", "Today 9:44 AM"],
+  ]),
+  mkThread(3, 0, "2h", [
+    ["me", "Congrats on Monsoon Chess getting financed! 🎉", "Mon 11:20 AM"],
+    ["them", "Thank you! Apply through the call so Ritika sees you — but tape scene 14 like it's a comedy 😉", "Mon 2:47 PM"],
+  ]),
+  mkThread(6, 1, "1d", [
+    ["them", "The Peppermint brief is unhinged in the best way. Ankle-deep water 😅 Are you taping for it?", "Fri 8:40 PM"],
+    ["me", "Cutting my movement tape this weekend!", "Fri 8:52 PM"],
+    ["them", "Groundedness over tricks. Show me weight and control 💪", "Fri 9:30 PM"],
+  ]),
+];
+
+const MOCK_REPLIES = [
+  "Love it — let me get back to you by end of day.",
+  "Perfect, that works. Talk soon 🎬",
+  "Noted! Sending details across shortly.",
+  "Amazing. Let me loop in the team and revert ✨",
+];
 
 function MessagesInner() {
   const router = useRouter();
@@ -50,8 +86,8 @@ function MessagesInner() {
         }
       }`
     )
-      .then((d) => setThreads(d.conversations))
-      .catch(() => setThreads([]));
+      .then((d) => setThreads([...d.conversations, ...MOCK_THREADS]))
+      .catch(() => setThreads(MOCK_THREADS));
   }, []);
 
   // search people to start a brand-new conversation
@@ -106,6 +142,11 @@ function MessagesInner() {
   useEffect(() => {
     if (!selected || selected.unread === 0) return;
     const id = selected.id;
+    if (id.startsWith("mock-conv-")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setThreads((prev) => (prev ? prev.map((t) => (t.id === id ? { ...t, unread: 0 } : t)) : prev));
+      return;
+    }
     gql(`mutation($id: ID!) { markRead(conversationId: $id) }`, { id })
       .then(() =>
         setThreads((prev) =>
@@ -124,6 +165,20 @@ function MessagesInner() {
     const text = draft.trim();
     if (!text || !selected) return;
     setDraft("");
+
+    // mock threads: reply locally so the demo feels alive
+    if (selected.id.startsWith("mock-conv-")) {
+      const now = "Just now";
+      const mine: Message = { id: `mm-out-${Date.now()}`, from: "me", text, time: now };
+      setThreads((prev) => (prev ? prev.map((t) => (t.id === selected.id ? { ...t, lastActive: "now", messages: [...t.messages, mine] } : t)) : prev));
+      setTyping(true);
+      window.setTimeout(() => {
+        setTyping(false);
+        const reply: Message = { id: `mm-in-${Date.now()}`, from: "them", text: MOCK_REPLIES[Math.floor(Math.random() * MOCK_REPLIES.length)], time: now };
+        setThreads((prev) => (prev ? prev.map((t) => (t.id === selected.id ? { ...t, messages: [...t.messages, reply] } : t)) : prev));
+      }, 1600);
+      return;
+    }
 
     gql<{ sendMessage: Message[] }>(
       `mutation($id: ID!, $text: String!) {

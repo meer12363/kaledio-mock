@@ -16,6 +16,7 @@ import {
 } from "@/components/icons";
 import { gql } from "@/lib/gql";
 import { useSession } from "@/lib/session";
+import { MOCK_PEOPLE } from "@/lib/mock";
 import type { ApplicationStatus } from "@/lib/types";
 
 const STATUS_META: Record<ApplicationStatus, { label: string; chip: string }> = {
@@ -34,16 +35,18 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">My Work</h1>
-          <p className="mt-1 text-[15px] text-ink-500">
+      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate">
+        <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
+        <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[100px] leading-none opacity-15">🎯</div>
+        <div className="relative">
+          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-[34px]">My Work</h1>
+          <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Track what you&apos;re applying for, and hire for what you&apos;re making — both live here.
           </p>
         </div>
       </div>
 
-      <div className="mt-6 flex gap-1 border-b border-line">
+      <div className="mt-5 flex gap-1 border-b border-line">
         <button
           onClick={() => setTab("work")}
           className={`relative flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold transition-colors ${
@@ -103,6 +106,22 @@ interface CustomEventRow {
   note: string;
 }
 
+const MOCK_APPS: AppRow[] = [
+  {
+    id: "mock-app-1", status: "audition_requested", appliedAgo: "5d ago",
+    auditionDate: "Jul 18, 2026 · 11:00", auditionISO: "2026-07-18",
+    call: { id: "mock-call-1", title: "Supporting cast (4) — 'Saltwater' S3", company: "Hoiche Originals", medium: "OTT Series", location: "Goa", deadline: "Jul 20", shootDates: "Aug–Dec 2026", shootStartISO: "2026-08-03", requiresAudition: true },
+  },
+  {
+    id: "mock-app-2", status: "applied", appliedAgo: "3d ago",
+    call: { id: "mock-call-3", title: "Two faces, 25–35 — skincare campaign", company: "Auréa", medium: "Ad Film", location: "London", deadline: "Jul 15", shootDates: "Jul 24–25", shootStartISO: "2026-07-24", requiresAudition: false },
+  },
+  {
+    id: "mock-app-3", status: "finalized", appliedAgo: "2w ago",
+    call: { id: "mock-call-8", title: "Ensemble (6) — 'Gulmohar Lane' revival", company: "Aranya Theatre", medium: "Theatre", location: "Mumbai", deadline: "Aug 5", shootDates: "Oct–Dec 2026", shootStartISO: "2026-09-01", requiresAudition: true },
+  },
+];
+
 function MyWorkTab() {
   const [apps, setApps] = useState<AppRow[] | null>(null);
   const [bookmarks, setBookmarks] = useState<BookmarkedCall[]>([]);
@@ -124,12 +143,12 @@ function MyWorkTab() {
       }`
     )
       .then((d) => {
-        setApps(d.myApplications);
+        setApps(d.myApplications.length ? d.myApplications : MOCK_APPS);
         setBookmarks(d.myBookmarkedCalls);
         setCustomEvents(d.myCustomEvents);
       })
       .catch(() => {
-        setApps([]);
+        setApps(MOCK_APPS);
         setBookmarks([]);
         setCustomEvents([]);
       });
@@ -369,6 +388,34 @@ const emptyDraft = {
   requiresAudition: true,
 };
 
+const mockApplicant = (idx: number, status: ApplicationStatus, appliedAgo: string, note?: string) => {
+  const p = MOCK_PEOPLE[idx];
+  return { person: { id: p.id, name: p.name, headline: p.headline, hue: p.hue, avatarUrl: "", roles: p.roles }, status, appliedAgo, note: note ?? null };
+};
+
+const MOCK_LISTINGS: ListingRow[] = [
+  {
+    id: "mock-listing-1", title: "Supporting cast (3) — anthology 'Glass Harbour'", medium: "Feature Film", location: "Mumbai",
+    compensation: "Paid — union rates", shootDates: "Nov 2 – Dec 14, 2026", deadline: "Aug 15", description: "Three interlocking stories set around a container port.",
+    requiresAudition: true, postedAgo: "4d ago",
+    applicants: [
+      mockApplicant(0, "audition_requested", "3d ago", "Konkani-accented Hindi is no problem — happy to tape any scene."),
+      mockApplicant(10, "applied", "2d ago", "200 nights of stage work; the harbour-master is my part."),
+      mockApplicant(5, "applied", "1d ago"),
+      mockApplicant(6, "rejected", "4d ago"),
+    ],
+  },
+  {
+    id: "mock-listing-2", title: "Narrators (2) — 'Nightwater' audio series", medium: "Audio Series", location: "Remote",
+    compensation: "Paid — per-finished-hour", shootDates: "Aug–Sep 2026", deadline: "Jul 31", description: "Eight-part scripted audio thriller, alternating chapters.",
+    requiresAudition: false, postedAgo: "1d ago",
+    applicants: [
+      mockApplicant(4, "finalized", "22h ago", "Demo attached — chapter one in two reads, warm and cold."),
+      mockApplicant(9, "applied", "8h ago"),
+    ],
+  },
+];
+
 function StudioTab() {
   const [listings, setListings] = useState<ListingRow[] | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -385,10 +432,14 @@ function StudioTab() {
   useEffect(() => {
     gql<{ myListings: ListingRow[] }>(`query { myListings { ${LISTING_FIELDS} } }`)
       .then((d) => {
-        setListings(d.myListings);
-        setExpanded(d.myListings[0]?.id ?? null);
+        const merged = d.myListings.length ? d.myListings : MOCK_LISTINGS;
+        setListings(merged);
+        setExpanded(merged[0]?.id ?? null);
       })
-      .catch(() => setListings([]));
+      .catch(() => {
+        setListings(MOCK_LISTINGS);
+        setExpanded(MOCK_LISTINGS[0].id);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

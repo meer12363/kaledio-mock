@@ -8,6 +8,7 @@ import { ConnectButton } from "@/components/ConnectButton";
 import { IconArrowLeft } from "@/components/icons";
 import { Card, Skeleton } from "@/components/ui";
 import { gql, PERSON_FIELDS } from "@/lib/gql";
+import { mockPersonProfile } from "@/lib/mock";
 import type { Person } from "@/lib/types";
 
 export default function MemberProfilePage() {
@@ -22,8 +23,8 @@ export default function MemberProfilePage() {
       query($id: ID!) { person(id: $id) { ...PersonFields } }`,
       { id }
     )
-      .then((d) => setPerson(d.person))
-      .catch(() => setPerson(null));
+      .then((d) => setPerson(d.person ?? mockPersonProfile(id)))
+      .catch(() => setPerson(mockPersonProfile(id)));
   }, [id]);
 
   const message = () => {

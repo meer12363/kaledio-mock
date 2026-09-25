@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { TopNav } from "@/components/TopNav";
 import { ToastProvider } from "@/components/Toast";
 import { WelcomeModal } from "@/components/WelcomeModal";
+import { LivePulse } from "@/components/LivePulse";
+import { CreateMenu } from "@/components/CreateMenu";
+import { CreateCastingModal } from "@/components/CreateCastingModal";
 import { useSession } from "@/lib/session";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -30,6 +33,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
         <WelcomeModal />
+        <CreateMenu />
+        <CreateCastingModal />
+        <LivePulse />
       </div>
     </ToastProvider>
   );

@@ -86,19 +86,7 @@ export function TopNav() {
   const availability = AVAILABILITY_META[user.availability as Availability];
   const avatarSrc = user.details?.profilePicture || undefined;
 
-  const startCompose = () => {
-    if (pathname === "/home") {
-      // already on the feed — open the composer in place
-      window.dispatchEvent(new CustomEvent("kaledio:compose"));
-      return;
-    }
-    try {
-      sessionStorage.setItem("kaledio.compose", "1");
-    } catch {
-      /* ignore */
-    }
-    router.push("/home");
-  };
+  const openCreate = () => window.dispatchEvent(new CustomEvent("kaledio:open-create"));
 
   return (
     <>
@@ -152,7 +140,7 @@ export function TopNav() {
           <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2 md:flex-none">
             {/* Create */}
             <button
-              onClick={startCompose}
+              onClick={openCreate}
               className="press sheen hidden items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-glow-accent [background:var(--grad-spotlight)] sm:inline-flex"
             >
               <IconPlus size={16} /> Create
@@ -288,7 +276,7 @@ export function TopNav() {
 
           {/* center Create FAB */}
           <button
-            onClick={startCompose}
+            onClick={openCreate}
             aria-label="Create a post"
             className="press -mt-6 flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-white shadow-glow-accent ring-4 ring-paper [background:var(--grad-spotlight)]"
           >

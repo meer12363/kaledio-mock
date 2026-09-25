@@ -14,6 +14,7 @@ import {
 } from "./icons";
 import { gql } from "@/lib/gql";
 import { useSession } from "@/lib/session";
+import { REACTIONS } from "@/lib/mock";
 import type { MediaItem, PostKind } from "@/lib/types";
 
 interface PostComment {
@@ -60,11 +61,40 @@ export function PostCard({ post }: { post: FeedPost }) {
   const [comments, setComments] = useState<PostComment[] | null>(null);
   const [copied, setCopied] = useState(false);
   const [burst, setBurst] = useState(false);
+  const [reaction, setReaction] = useState<string | null>(post.liked ? "❤️" : null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   // optimistic posts don't exist on the server until createPost confirms
   const isPending = post.id.startsWith("pending-");
 
+  const pickReaction = (emoji: string) => {
+    setPickerOpen(false);
+    setBurst(true);
+    window.setTimeout(() => setBurst(false), 600);
+    setReaction((prev) => {
+      if (prev === emoji) {
+        setLikes((n) => Math.max(0, n - 1));
+        setLiked(false);
+        return null;
+      }
+      if (!prev) setLikes((n) => n + 1);
+      setLiked(true);
+      return emoji;
+    });
+    if (!isPending && !liked) {
+      gql(`mutation($id: ID!) { toggleLike(id: $id) { id } }`, { id: post.id }).catch(() => {});
+    }
+  };
+
   const toggleLike = () => {
+    if (reaction) {
+      // clear reaction
+      setReaction(null);
+      setLiked(false);
+      setLikes((n) => Math.max(0, n - 1));
+      return;
+    }
+    setReaction("❤️");
     if (!liked) {
       setBurst(true);
       window.setTimeout(() => setBurst(false), 600);
@@ -221,40 +251,89 @@ export function PostCard({ post }: { post: FeedPost }) {
         </div>
       )}
 
-      <div className="flex items-center gap-1 border-t border-line px-2 py-1 sm:px-3">
-        <button
-          onClick={toggleLike}
-          aria-pressed={liked}
-          className={`press flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors duration-150 ${
-            liked ? "text-accent-600" : "text-ink-500 hover:bg-canvas hover:text-ink-800"
-          }`}
-        >
-          <span className="relative inline-flex">
-            <IconHeart
-              size={17}
-              filled={liked}
-              style={burst ? { animation: "like-burst 0.55s cubic-bezier(0.34,1.56,0.64,1)" } : undefined}
-            />
-            {burst && (
+      {/* reaction summary */}
+      {likes > 0 && (
+        <div className="flex items-center gap-2 px-4 pb-1 pt-1 sm:px-5">
+          <span className="flex -space-x-1">
+            {["❤️", "🔥", "👏"].map((e, i) => (
               <span
-                className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent-500"
-                style={{ animation: "heart-ring 0.6s ease-out forwards" }}
-              />
-            )}
+                key={e}
+                className="flex h-5 w-5 items-center justify-center rounded-full bg-paper text-[11px] ring-1 ring-line"
+                style={{ zIndex: 3 - i }}
+              >
+                {e}
+              </span>
+            ))}
           </span>
-          {likes.toLocaleString("en-IN")}
-        </button>
+          <span className="text-[12.5px] text-ink-500">
+            {reaction ? "You" : "Aanya"} and {(likes - (reaction ? 1 : 0)).toLocaleString("en-IN")} others
+          </span>
+        </div>
+      )}
+
+      <div className="flex items-center gap-1 border-t border-line px-2 py-1 sm:px-3">
+        {/* react control with hover picker */}
+        <div
+          className="relative"
+          onMouseEnter={() => setPickerOpen(true)}
+          onMouseLeave={() => setPickerOpen(false)}
+        >
+          {pickerOpen && (
+            <div
+              className="absolute bottom-[calc(100%+6px)] left-0 z-20 flex items-center gap-0.5 rounded-full border border-line bg-paper px-1.5 py-1 shadow-pop"
+              style={{ animation: "pop-in 0.18s cubic-bezier(0.34,1.56,0.64,1) both" }}
+            >
+              {REACTIONS.map((e) => (
+                <button
+                  key={e}
+                  onClick={() => pickReaction(e)}
+                  aria-label={`React ${e}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-[20px] transition-transform duration-150 hover:-translate-y-1 hover:scale-125"
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={toggleLike}
+            aria-pressed={liked}
+            className={`press flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors duration-150 ${
+              reaction ? "text-accent-600" : "text-ink-500 hover:bg-canvas hover:text-ink-800"
+            }`}
+          >
+            <span className="relative inline-flex">
+              {reaction ? (
+                <span
+                  className="text-[17px] leading-none"
+                  style={burst ? { animation: "like-burst 0.55s cubic-bezier(0.34,1.56,0.64,1)" } : undefined}
+                >
+                  {reaction}
+                </span>
+              ) : (
+                <IconHeart size={17} />
+              )}
+              {burst && (
+                <span
+                  className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent-500"
+                  style={{ animation: "heart-ring 0.6s ease-out forwards" }}
+                />
+              )}
+            </span>
+            {reaction ? "Reacted" : "React"}
+          </button>
+        </div>
         <button
           onClick={openComments}
           aria-expanded={commentsOpen}
-          className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-canvas hover:text-ink-800"
+          className="press flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-canvas hover:text-ink-800"
         >
           <IconComment size={17} />
           {commentCount}
         </button>
         <button
           onClick={share}
-          className="ml-auto flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-canvas hover:text-ink-800"
+          className="press ml-auto flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-canvas hover:text-ink-800"
         >
           <IconShare size={17} />
           {copied ? "Link copied" : "Share"}

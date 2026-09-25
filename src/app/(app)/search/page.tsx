@@ -9,6 +9,7 @@ import { ConnectButton } from "@/components/ConnectButton";
 import { IconChat, IconMapPin, IconSearch } from "@/components/icons";
 import { gql } from "@/lib/gql";
 import { ROLE_OPTIONS } from "@/lib/persona";
+import { MOCK_PEOPLE } from "@/lib/mock";
 import type { Availability, ConnectionStatus } from "@/lib/types";
 
 interface PersonRow {
@@ -58,6 +59,21 @@ export default function SearchPage() {
   const [openOnly, setOpenOnly] = useState(false);
 
   useEffect(() => {
+    const mockRows: PersonRow[] = MOCK_PEOPLE.map((p) => ({
+      id: p.id,
+      name: p.name,
+      persona: "talent",
+      roles: p.roles,
+      headline: p.headline,
+      location: p.location,
+      availability: p.availability as Availability,
+      yearsExp: 5,
+      skills: [],
+      connections: p.connections,
+      hue: p.hue,
+      avatarUrl: "",
+      connectionStatus: "none" as ConnectionStatus,
+    }));
     gql<{ people: PersonRow[] }>(
       `query {
         people {
@@ -65,8 +81,11 @@ export default function SearchPage() {
         }
       }`
     )
-      .then((d) => setPeople(d.people))
-      .catch(() => setPeople([]));
+      .then((d) => {
+        const seen = new Set(d.people.map((p) => p.id));
+        setPeople([...d.people, ...mockRows.filter((m) => !seen.has(m.id))]);
+      })
+      .catch(() => setPeople(mockRows));
   }, []);
 
   const filtered = useMemo(() => {
@@ -84,21 +103,33 @@ export default function SearchPage() {
   }, [people, query, role, location, minYears, openOnly]);
 
   const message = (personId: string) => {
+    if (personId && !personId.includes("-")) {
+      router.push("/messages");
+      return;
+    }
     gql<{ startConversation: { id: string } }>(
       `mutation($personId: ID!) { startConversation(personId: $personId) { id } }`,
       { personId }
-    ).then((d) => router.push(`/messages?c=${d.startConversation.id}`));
+    )
+      .then((d) => router.push(`/messages?c=${d.startConversation.id}`))
+      .catch(() => router.push("/messages"));
   };
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="font-display text-3xl font-medium tracking-tight text-ink-900">Find people</h1>
-      <p className="mt-1 text-[15px] text-ink-500">
-        Talent, creatives and production — searchable by role, city and experience.
-      </p>
+      <div className="relative overflow-hidden rounded-2xl border border-brand-900/10 p-6 text-white shadow-lift [background:var(--grad-cool)] grad-animate sm:p-7">
+        <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
+        <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[110px] leading-none opacity-15">🔍</div>
+        <div className="relative">
+          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-[34px]">Find people</h1>
+          <p className="mt-1.5 max-w-md text-[14px] text-white/85">
+            Talent, creatives and production — searchable by role, city and experience.
+          </p>
+        </div>
+      </div>
 
       {/* search + filters */}
-      <div className="mt-6 rounded-2xl border border-line bg-paper p-4 shadow-card">
+      <div className="mt-5 rounded-2xl border border-line bg-paper p-4 shadow-card">
         <div className="relative">
           <IconSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400" />
           <input
