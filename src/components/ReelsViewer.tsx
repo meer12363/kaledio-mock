@@ -163,7 +163,7 @@ function ReelsOverlay({ startIndex, onClose }: { startIndex: number; onClose: ()
       {/* chrome */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center justify-between p-4">
         <div className="pointer-events-auto flex items-center gap-2">
-          <span className="font-display text-xl font-extrabold text-white">Reels</span>
+          <span className="font-display text-xl font-bold text-white">Reels</span>
           <span className="rounded-full bg-volt px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-black">
             {active + 1}/{MOCK_REELS.length}
           </span>
@@ -472,12 +472,12 @@ function CommentSheet({ reel, onClose }: { reel: Reel; onClose: () => void }) {
         className="relative w-full max-w-md rounded-t-3xl border border-line bg-elevated p-4 pb-6 md:mb-4 md:rounded-3xl"
         style={{ animation: "modal-in 0.3s cubic-bezier(0.22,1,0.36,1) both" }}
       >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-ink-900/20" />
         <div className="flex items-center justify-between">
           <p className="font-display text-[16px] font-bold text-ink-900">
             {fmt(reel.comments + comments.length - MOCK_COMMENTS.length)} comments
           </p>
-          <button onClick={onClose} aria-label="Close comments" className="rounded-full p-1.5 text-ink-400 hover:bg-white/5 hover:text-ink-900">
+          <button onClick={onClose} aria-label="Close comments" className="rounded-full p-1.5 text-ink-400 hover:bg-ink-900/5 hover:text-ink-900">
             <IconX size={16} />
           </button>
         </div>
@@ -498,7 +498,7 @@ function CommentSheet({ reel, onClose }: { reel: Reel; onClose: () => void }) {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Add a comment…"
-            className="min-w-0 flex-1 rounded-full border border-line-strong bg-paper px-4 py-2.5 text-sm focus:border-volt focus:outline-none"
+            className="min-w-0 flex-1 rounded-full border border-line-strong bg-paper px-4 py-2.5 text-sm focus:border-volt-ink focus:outline-none"
           />
           <button
             type="submit"

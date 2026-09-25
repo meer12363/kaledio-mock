@@ -69,7 +69,7 @@ export function Chip({
 
 export function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-md border border-line bg-white/[0.03] px-2 py-0.5 text-xs font-medium text-ink-600 transition-colors hover:border-ink-400 hover:text-ink-900">
+    <span className="inline-flex items-center rounded-md border border-line bg-ink-900/[0.03] px-2 py-0.5 text-xs font-medium text-ink-600 transition-colors hover:border-ink-400 hover:text-ink-900">
       {children}
     </span>
   );
@@ -91,7 +91,7 @@ export function Card({
   return (
     <div
       className={`rounded-3xl border border-line bg-paper shadow-card ${
-        interactive ? "hover-lift hover:border-white/15" : ""
+        interactive ? "hover-lift hover:border-ink-900/15" : ""
       } ${glow ? "shadow-lift" : ""} ${className}`}
     >
       {children}
@@ -102,9 +102,9 @@ export function Card({
 type ButtonVariant = "primary" | "accent" | "ghost" | "outline";
 
 const BTN_VARIANTS: Record<ButtonVariant, string> = {
-  primary: "bg-ink-900 text-canvas hover:bg-white shadow-sm",
+  primary: "bg-ink-900 text-canvas hover:opacity-90 shadow-sm",
   accent: "text-black font-bold hover:shadow-glow-accent [background:var(--grad-spotlight)]",
-  ghost: "text-ink-600 hover:bg-white/[0.05] hover:text-ink-900",
+  ghost: "text-ink-600 hover:bg-ink-900/[0.05] hover:text-ink-900",
   outline: "border border-line-strong bg-transparent text-ink-800 hover:border-ink-400 hover:text-ink-900",
 };
 

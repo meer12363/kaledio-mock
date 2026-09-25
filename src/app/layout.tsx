@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Syne, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/lib/session";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme-script";
 
 // UI / body — a characterful grotesk instead of the default Inter look
 const grotesk = Space_Grotesk({
@@ -42,8 +43,14 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
+      data-theme="dark"
+      suppressHydrationWarning
       className={`${grotesk.variable} ${syne.variable} ${mono.variable} h-full antialiased`}
     >
+      <head>
+        {/* apply the saved theme before first paint — no dark→light flash */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <AppProviders>{children}</AppProviders>
       </body>

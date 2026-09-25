@@ -99,7 +99,7 @@ export default function ConnectionsPage() {
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[100px] leading-none opacity-15">🤝</div>
         <div className="relative">
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] sm:text-[52px]">Your network</h1>
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] sm:text-[52px]">Your network</h1>
           <p className="mt-1.5 text-[14px] text-white/85">
             {connections?.length ?? 0} connections · {incoming?.length ?? 0} new requests waiting
           </p>

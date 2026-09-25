@@ -121,7 +121,7 @@ export default function SearchPage() {
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[110px] leading-none opacity-15">🔍</div>
         <div className="relative">
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] sm:text-[56px]">Find people</h1>
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] sm:text-[56px]">Find people</h1>
           <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Talent, creatives and production — searchable by role, city and experience.
           </p>

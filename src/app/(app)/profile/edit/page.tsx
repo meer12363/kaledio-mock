@@ -167,7 +167,7 @@ export default function ProfileEditPage() {
 
       <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] text-ink-900 sm:text-[52px]">
             Edit {isCompany ? "company profile" : "profile"}
           </h1>
           <p className="mt-1 text-[15px] text-ink-500">

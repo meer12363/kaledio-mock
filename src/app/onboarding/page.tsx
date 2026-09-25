@@ -126,7 +126,7 @@ export default function OnboardingPage() {
 
       {step === 0 && (
         <>
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] text-ink-900 sm:text-[52px]">
             Welcome to Kaledio
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">
@@ -184,7 +184,7 @@ export default function OnboardingPage() {
           <button onClick={() => setStep(0)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800">
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] text-ink-900 sm:text-[52px]">
             Which side of the camera are you on?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">You can post AND apply either way — this just tailors your dashboard.</p>
@@ -221,7 +221,7 @@ export default function OnboardingPage() {
           <button onClick={() => setStep(1)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800">
             <IconArrowLeft size={15} /> Back
           </button>
-          <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
+          <h1 className="font-display text-[40px] font-bold leading-[0.95] text-ink-900 sm:text-[52px]">
             What {isCompany ? "does your company do" : "do you do"}?
           </h1>
           <p className="mt-2 text-[15px] text-ink-500">Pick everything that applies.</p>

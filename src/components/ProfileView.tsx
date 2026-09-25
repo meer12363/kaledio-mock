@@ -48,7 +48,7 @@ export function ProfileView({
           <div className="absolute inset-0 [background:var(--grad-hero)] opacity-70 mix-blend-multiply" />
           <div className="absolute inset-0 opacity-60 [background:var(--grad-mesh)]" />
           {/* giant ghosted name — poster style */}
-          <p className="pointer-events-none absolute -bottom-6 left-4 select-none whitespace-nowrap font-display text-[96px] font-extrabold leading-none text-white/10 sm:text-[140px]">
+          <p className="pointer-events-none absolute -bottom-6 left-4 select-none whitespace-nowrap font-display text-[96px] font-bold leading-none text-white/10 sm:text-[140px]">
             {profile.name.split(" ")[0]}
           </p>
           <span className="absolute right-4 top-4 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur">
@@ -67,7 +67,7 @@ export function ProfileView({
 
           <div className="mt-4">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h1 className="font-display text-[34px] font-extrabold leading-none text-ink-900 sm:text-[42px]">{profile.name}</h1>
+              <h1 className="font-display text-[34px] font-bold leading-none text-ink-900 sm:text-[42px]">{profile.name}</h1>
               <AvailabilityBadge status={profile.availability} />
             </div>
             <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-ink-600">{profile.headline}</p>

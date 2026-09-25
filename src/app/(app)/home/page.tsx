@@ -195,8 +195,11 @@ export default function HomePage() {
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
               {greet} — {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
             </p>
-            <h1 className="mt-3 break-words font-display text-[34px] font-extrabold leading-[0.95] text-white min-[420px]:text-[40px] sm:text-[56px] xl:text-[68px]">
-              {firstName}, your next role is <span className="volt-text">out there.</span>
+            <p className="mt-5 text-[17px] font-medium text-white/85 sm:text-[19px]">
+              Hey {firstName} <span className="inline-block origin-[70%_70%] animate-[float-soft_2.4s_ease-in-out_infinite]">👋</span>
+            </p>
+            <h1 className="mt-1.5 max-w-xl text-balance font-display text-[34px] font-bold leading-[1.04] tracking-[-0.045em] text-white sm:text-[46px] xl:text-[54px]">
+              Your next role is <span className="volt-text">out there.</span>
             </h1>
             <div className="no-scrollbar -mx-6 mt-6 flex gap-2 overflow-x-auto px-6 sm:mx-0 sm:flex-wrap sm:px-0">
               {PROMPTS.map((p) => (
@@ -215,22 +218,22 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-2.5">
             <Link href="/profile" className="press group min-w-0 rounded-2xl bg-black/30 p-3.5 backdrop-blur sm:p-4 transition-colors hover:bg-black/45">
               <p className="truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-white/60">Streak</p>
-              <p className="mt-1 font-display text-[22px] font-extrabold leading-none min-[380px]:text-[26px] sm:text-3xl text-volt">🔥 3</p>
+              <p className="mt-1 font-display text-[22px] font-bold leading-none min-[380px]:text-[26px] sm:text-3xl text-volt">🔥 3</p>
               <p className="text-[12px] text-white/70">days on set</p>
             </Link>
             <Link href="/profile" className="press group min-w-0 rounded-2xl bg-black/30 p-3.5 backdrop-blur sm:p-4 transition-colors hover:bg-black/45">
               <p className="truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-white/60">Profile views</p>
-              <p className="mt-1 font-display text-[22px] font-extrabold leading-none min-[380px]:text-[26px] sm:text-3xl text-white">248</p>
+              <p className="mt-1 font-display text-[22px] font-bold leading-none min-[380px]:text-[26px] sm:text-3xl text-white">248</p>
               <p className="text-[12px] font-semibold text-go">▲ 18 this week</p>
             </Link>
             <Link href="/dashboard" className="press group min-w-0 rounded-2xl bg-black/30 p-3.5 backdrop-blur sm:p-4 transition-colors hover:bg-black/45">
               <p className="truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-white/60">Applications</p>
-              <p className="mt-1 font-display text-[22px] font-extrabold leading-none min-[380px]:text-[26px] sm:text-3xl text-white">3</p>
+              <p className="mt-1 font-display text-[22px] font-bold leading-none min-[380px]:text-[26px] sm:text-3xl text-white">3</p>
               <p className="text-[12px] text-white/70">1 audition booked</p>
             </Link>
             <Link href="/casting" className="press group min-w-0 rounded-2xl bg-white p-3.5 transition-transform sm:p-4 hover:-translate-y-0.5">
               <p className="truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-black/50">Matches</p>
-              <p className="mt-1 font-display text-[22px] font-extrabold leading-none min-[380px]:text-[26px] sm:text-3xl text-black">12</p>
+              <p className="mt-1 font-display text-[22px] font-bold leading-none min-[380px]:text-[26px] sm:text-3xl text-black">12</p>
               <p className="text-[12px] font-semibold text-black/70">roles for you →</p>
             </Link>
           </div>
@@ -267,7 +270,7 @@ export default function HomePage() {
                   <Avatar name={user.name} hue={3} size={44} src={avatarSrc} />
                   <button
                     onClick={() => openComposer()}
-                    className="flex-1 rounded-2xl border border-line-strong bg-canvas/60 px-5 py-3 text-left text-[15px] text-ink-400 transition-colors duration-150 hover:border-volt/60 hover:text-ink-600"
+                    className="flex-1 rounded-2xl border border-line-strong bg-canvas/60 px-5 py-3 text-left text-[15px] text-ink-400 transition-colors duration-150 hover:border-volt-ink/60 hover:text-ink-600"
                   >
                     Share an update, a wrap, a win…
                   </button>
@@ -291,7 +294,7 @@ export default function HomePage() {
                       rows={3}
                       placeholder={placeholder}
                       aria-label="Write a post"
-                      className="flex-1 resize-none rounded-2xl border border-line-strong bg-canvas/60 px-4 py-3 text-[16px] leading-relaxed focus:border-volt focus:outline-none"
+                      className="flex-1 resize-none rounded-2xl border border-line-strong bg-canvas/60 px-4 py-3 text-[16px] leading-relaxed focus:border-volt-ink focus:outline-none"
                     />
                   </div>
 
@@ -320,7 +323,7 @@ export default function HomePage() {
                       <button
                         type="button"
                         onClick={() => fileInput.current?.click()}
-                        className="press rounded-xl border border-line-strong px-3.5 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-volt hover:text-volt"
+                        className="press rounded-xl border border-line-strong px-3.5 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-volt-ink hover:text-volt-ink"
                       >
                         📸 Media
                       </button>
@@ -330,7 +333,7 @@ export default function HomePage() {
                           onClick={() => setEmojiOpen((o) => !o)}
                           aria-expanded={emojiOpen}
                           aria-label="Add emoji"
-                          className="press rounded-xl border border-line-strong px-3.5 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-volt hover:text-volt"
+                          className="press rounded-xl border border-line-strong px-3.5 py-2 text-[13px] font-semibold text-ink-600 transition-colors hover:border-volt-ink hover:text-volt-ink"
                         >
                           😊 Emoji
                         </button>
@@ -483,7 +486,7 @@ export default function HomePage() {
               <ul className="mt-3 space-y-1">
                 {MOCK_CALLS.slice(0, 4).map((c) => (
                   <li key={c.id}>
-                    <Link href="/casting" className="group flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-white/[0.03]">
+                    <Link href="/casting" className="group flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-ink-900/[0.03]">
                       <span className="mt-0.5 rounded-md bg-accent-50 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-600">{c.deadline}</span>
                       <span className="min-w-0">
                         <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink-800 group-hover:text-ink-900">{c.title}</span>
@@ -495,7 +498,7 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/casting" className="mt-2 block border-t border-line px-2 pt-3 text-[13px] font-bold text-volt hover:underline">
+              <Link href="/casting" className="mt-2 block border-t border-line px-2 pt-3 text-[13px] font-bold text-volt-ink hover:underline">
                 Open the board →
               </Link>
             </Card>
@@ -506,7 +509,7 @@ export default function HomePage() {
               <ul className="mt-3 space-y-1">
                 {MOCK_PEOPLE.slice(0, 5).map((p, i) => (
                   <li key={p.id}>
-                    <Link href={`/profile/${p.id}`} className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-white/[0.03]">
+                    <Link href={`/profile/${p.id}`} className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-ink-900/[0.03]">
                       <span className="w-4 font-mono text-[11px] font-bold text-ink-400">{String(i + 1).padStart(2, "0")}</span>
                       <Avatar name={p.name} hue={p.hue} size={34} />
                       <span className="min-w-0 flex-1">

@@ -20,6 +20,7 @@ import {
 } from "./icons";
 import { useSession } from "@/lib/session";
 import { useToast } from "./Toast";
+import { ThemeToggle } from "./ThemeToggle";
 import { gql } from "@/lib/gql";
 import { AVAILABILITY_META } from "./ui";
 import { LIVE_PULSES } from "@/lib/mock";
@@ -116,7 +117,7 @@ export function TopNav() {
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={`group relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-[13.5px] font-semibold transition-all duration-200 ${
-                    active ? "bg-white/[0.07] text-ink-900" : "text-ink-500 hover:bg-white/[0.04] hover:text-ink-900"
+                    active ? "bg-ink-900/[0.07] text-ink-900" : "text-ink-500 hover:bg-ink-900/[0.04] hover:text-ink-900"
                   }`}
                 >
                   <span className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
@@ -130,7 +131,7 @@ export function TopNav() {
                   <span>{label}</span>
                   {active && (
                     <span
-                      className="absolute -bottom-[3px] left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-volt"
+                      className="absolute -bottom-[3px] left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-volt-ink"
                       style={{ boxShadow: "0 0 12px rgba(215,255,58,0.7)" }}
                     />
                   )}
@@ -150,7 +151,7 @@ export function TopNav() {
                   aria-label={label}
                   title={label}
                   className={`relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors ${
-                    active ? "bg-white/[0.08] text-volt" : "text-ink-500 hover:bg-white/[0.04] hover:text-ink-900"
+                    active ? "bg-ink-900/[0.08] text-volt-ink" : "text-ink-500 hover:bg-ink-900/[0.04] hover:text-ink-900"
                   }`}
                 >
                   <Icon size={19} />
@@ -163,7 +164,7 @@ export function TopNav() {
             <Link
               href="/search"
               aria-label="Search"
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-white/[0.05] hover:text-ink-900 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-ink-900/[0.05] hover:text-ink-900 md:hidden"
             >
               <IconSearch size={19} />
             </Link>
@@ -174,13 +175,15 @@ export function TopNav() {
               <IconPlus size={16} /> Create
             </button>
 
+            <ThemeToggle />
+
             {/* Notifications */}
             <div className="relative" ref={bellRef}>
               <button
                 onClick={() => setBellOpen((o) => !o)}
                 aria-label="Notifications"
                 aria-expanded={bellOpen}
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-white/[0.05] hover:text-ink-900"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-ink-500 transition-colors hover:bg-ink-900/[0.05] hover:text-ink-900"
               >
                 <IconBell size={19} />
                 <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-volt" style={{ animation: "ring-pulse 2s ease-out infinite" }} />
@@ -193,7 +196,7 @@ export function TopNav() {
                 >
                   <div className="flex items-center justify-between border-b border-line px-4 py-3">
                     <p className="font-display text-[15px] font-bold text-ink-900">Activity</p>
-                    <span className="eyebrow !text-volt">● live</span>
+                    <span className="eyebrow !text-volt-ink">● live</span>
                   </div>
                   <ul className="max-h-80 overflow-y-auto p-1.5">
                     {notes.map((n, i) => (
@@ -203,9 +206,9 @@ export function TopNav() {
                             setBellOpen(false);
                             router.push(n.href);
                           }}
-                          className="flex w-full items-start gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-white/[0.04]"
+                          className="flex w-full items-start gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-ink-900/[0.04]"
                         >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-lg">{n.emoji}</span>
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink-900/[0.06] text-lg">{n.emoji}</span>
                           <span className="min-w-0">
                             <span className="block text-[13px] leading-snug text-ink-800">{n.text}</span>
                             <span className="mt-0.5 block font-mono text-[10.5px] uppercase tracking-wider text-ink-400">{i * 7 + 2}m ago</span>
@@ -226,7 +229,7 @@ export function TopNav() {
                 aria-expanded={menuOpen}
                 aria-label="Account menu"
                 className={`flex items-center rounded-full p-0.5 transition-all duration-200 ${
-                  menuOpen ? "ring-2 ring-volt" : "hover:ring-2 hover:ring-white/20"
+                  menuOpen ? "ring-2 ring-volt-ink" : "hover:ring-2 hover:ring-ink-900/20"
                 }`}
               >
                 <Avatar name={user.name} hue={3} size={34} src={avatarSrc} />
@@ -241,7 +244,7 @@ export function TopNav() {
                   <Link
                     href="/profile"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl p-2.5 transition-colors hover:bg-white/[0.04]"
+                    className="flex items-center gap-3 rounded-xl p-2.5 transition-colors hover:bg-ink-900/[0.04]"
                   >
                     <Avatar name={user.name} hue={3} size={42} src={avatarSrc} />
                     <div className="min-w-0">
@@ -266,11 +269,13 @@ export function TopNav() {
                         setMenuOpen(false);
                         router.push(href);
                       }}
-                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-white/[0.04] hover:text-ink-900"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-900/[0.04] hover:text-ink-900"
                     >
                       <Icon size={17} /> {label}
                     </button>
                   ))}
+                  <div className="my-1 border-t border-line" />
+                  <ThemeToggle variant="row" />
                   <div className="my-1 border-t border-line" />
                   <button
                     role="menuitem"
@@ -280,7 +285,7 @@ export function TopNav() {
                       signOut();
                       router.push("/");
                     }}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-white/[0.04] hover:text-danger"
+                    className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-900/[0.04] hover:text-danger"
                   >
                     <IconLogout size={17} /> Sign out
                   </button>
@@ -341,7 +346,7 @@ function MobileTab({
       href={href}
       aria-current={active ? "page" : undefined}
       className={`relative flex flex-1 flex-col items-center gap-0.5 py-2.5 font-mono text-[9.5px] uppercase tracking-wider transition-colors ${
-        active ? "text-volt" : "text-ink-400"
+        active ? "text-volt-ink" : "text-ink-400"
       }`}
     >
       <span className={`relative transition-transform duration-200 ${active ? "-translate-y-0.5 scale-110" : ""}`}>

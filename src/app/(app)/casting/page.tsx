@@ -144,7 +144,7 @@ export default function CastingBoardPage() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold backdrop-blur">
             <IconFire size={13} /> {totalRoles} roles casting now
           </span>
-          <h1 className="mt-3 font-display text-[40px] font-extrabold leading-[0.95] sm:text-[56px]">Casting board</h1>
+          <h1 className="mt-3 font-display text-[40px] font-bold leading-[0.95] sm:text-[56px]">Casting board</h1>
           <p className="mt-1.5 max-w-md text-[14px] text-white/85">
             Live roles across film, OTT, ad film, music video and theatre. Apply in one tap — new calls drop daily.
           </p>

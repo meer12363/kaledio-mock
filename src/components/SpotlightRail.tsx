@@ -20,7 +20,7 @@ export function SpotlightRail() {
         </div>
         <button
           onClick={() => openReels(0)}
-          className="press rounded-full border border-line-strong px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-ink-700 transition-colors hover:border-volt hover:text-volt"
+          className="press rounded-full border border-line-strong px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-ink-700 transition-colors hover:border-volt-ink hover:text-volt-ink"
         >
           Watch all ▶
         </button>
@@ -30,9 +30,9 @@ export function SpotlightRail() {
         {/* add your own */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("kaledio:open-create"))}
-          className="press group relative flex aspect-[9/16] w-[128px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-paper text-ink-500 transition-colors hover:border-volt hover:text-volt"
+          className="press group relative flex aspect-[9/16] w-[128px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line-strong bg-paper text-ink-500 transition-colors hover:border-volt-ink hover:text-volt-ink"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/[0.06] transition-transform group-hover:scale-110 group-hover:bg-volt group-hover:text-black">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ink-900/[0.06] transition-transform group-hover:scale-110 group-hover:bg-volt group-hover:text-black">
             <IconPlus size={20} />
           </span>
           <span className="font-mono text-[10.5px] font-bold uppercase tracking-wider">Post a reel</span>

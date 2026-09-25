@@ -51,7 +51,7 @@ export default function LoginPage() {
       quote="I booked two features off a profile I set up during a chai break."
       credit="Aanya Sharma — Actor, Mumbai"
     >
-      <h1 className="font-display text-[40px] font-extrabold leading-[0.95] text-ink-900 sm:text-[52px]">
+      <h1 className="font-display text-[40px] font-bold leading-[0.95] text-ink-900 sm:text-[52px]">
         Welcome back
       </h1>
       <p className="mt-2 text-[15px] text-ink-500">
