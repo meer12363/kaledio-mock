@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Avatar } from "./Avatar";
+import { CineVideo } from "./CineVideo";
 import { MediaPlaceholder } from "./Media";
 import { Card } from "./ui";
 import {
@@ -15,6 +16,7 @@ import {
 import { gql } from "@/lib/gql";
 import { useSession } from "@/lib/session";
 import { REACTIONS } from "@/lib/mock";
+import { CLIPS, type ClipId } from "@/lib/clips";
 import type { MediaItem, PostKind } from "@/lib/types";
 
 interface PostComment {
@@ -34,6 +36,8 @@ export interface FeedPost {
   /** real uploaded attachment (data URL) */
   mediaUrl?: string | null;
   mediaType?: "image" | "video" | null;
+  /** looping footage for mock trailer / BTS posts */
+  clip?: ClipId;
   likes: number;
   comments: number;
   liked: boolean;
@@ -221,7 +225,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         </div>
       )}
 
-      {!post.mediaUrl && post.media && (
+      {!post.mediaUrl && post.clip && <ClipPlayer clip={post.clip} media={post.media} />}
+
+      {!post.mediaUrl && !post.clip && post.media && (
         <div className="px-4 pb-4 sm:px-5">
           <MediaPlaceholder item={post.media} />
         </div>
@@ -384,5 +390,34 @@ export function PostCard({ post }: { post: FeedPost }) {
         </div>
       )}
     </Card>
+  );
+}
+
+/** in-feed autoplaying scene: muted by default, tap for sound */
+function ClipPlayer({ clip, media }: { clip: ClipId; media?: MediaItem | null }) {
+  const [muted, setMuted] = useState(true);
+  return (
+    <div className="px-4 pb-4 sm:px-5">
+      <div className="group relative aspect-video overflow-hidden rounded-xl bg-black">
+        {media && <MediaPlaceholder item={{ ...media, aspect: "wide" }} className="absolute inset-0 h-full" />}
+        <CineVideo clip={clip} muted={muted} length={16} onAutoMuted={() => setMuted(true)} className="absolute inset-0 h-full w-full" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/70 to-transparent" />
+        <span className="absolute left-3 top-3 flex items-center gap-1.5 rounded-md bg-black/60 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur">
+          <span className="h-1.5 w-1.5 rounded-full bg-danger" style={{ animation: "pulse-dot 1.4s ease-in-out infinite" }} />
+          Playing
+        </span>
+        <span className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-wider text-white/60">
+          {CLIPS[clip].film} · CC BY Blender Foundation
+        </span>
+        <button
+          type="button"
+          onClick={() => setMuted((m) => !m)}
+          aria-label={muted ? "Unmute video" : "Mute video"}
+          className="press absolute bottom-2.5 right-2.5 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-base text-white backdrop-blur transition-colors hover:bg-black/80"
+        >
+          {muted ? "🔇" : "🔊"}
+        </button>
+      </div>
+    </div>
   );
 }

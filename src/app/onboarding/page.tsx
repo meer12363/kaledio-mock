@@ -29,7 +29,7 @@ const REG_TYPES: Array<{ id: RegistrationType; icon: typeof IconUser; title: str
  *  Reached after any auth method (email or Google) if no profile row exists yet. */
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, ready, signIn, cut } = useSession();
+  const { user, isGuest, ready, signIn, cut } = useSession();
   const [checking, setChecking] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -44,7 +44,8 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (!ready) return;
-    if (user) {
+    // a guest session is the placeholder for "no Kaledio profile yet"
+    if (user && !isGuest) {
       router.replace("/home");
       return;
     }
@@ -60,7 +61,7 @@ export default function OnboardingPage() {
         setEmail(data.session.user.email ?? "");
         setChecking(false);
       });
-  }, [ready, user, router]);
+  }, [ready, user, isGuest, router]);
 
   const isCompany = regType === "company";
 

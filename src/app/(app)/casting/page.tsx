@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Button, Card, Chip, EmptyState, Tag } from "@/components/ui";
 import { useToast } from "@/components/Toast";
+import { CineVideo } from "@/components/CineVideo";
+import { Tilt } from "@/components/Tilt";
 import { IconBookmark, IconCheck, IconClapper, IconClock, IconFire, IconMapPin, IconSearch, IconUsers } from "@/components/icons";
 import { gql } from "@/lib/gql";
 import { MOCK_CALLS, MOCK_PEOPLE, type MockCall } from "@/lib/mock";
@@ -139,6 +141,8 @@ export default function CastingBoardPage() {
       {/* hero */}
       <div className="relative overflow-hidden rounded-[28px] border border-white/10 p-6 text-white shadow-lift [background:var(--grad-hero)] grad-animate sm:p-7">
         <div className="absolute inset-0 opacity-40 [background:var(--grad-mesh)]" />
+        <CineVideo clip="sintel-hero" eager length={18} className="absolute inset-0 h-full w-full" />
+        <div className="footage-shade absolute inset-0" />
         <div className="pointer-events-none absolute -right-4 -top-6 anim-float text-[110px] leading-none opacity-15">🎭</div>
         <div className="relative">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold backdrop-blur">
@@ -212,7 +216,8 @@ export default function CastingBoardPage() {
           const isSaved = saved.has(c.id);
           const fillingFast = c.applicants > 200;
           return (
-            <Card key={c.id} interactive className="anim-rise overflow-hidden" >
+            <Tilt key={c.id} className="anim-rise" max={7}>
+            <Card interactive className="h-full overflow-hidden">
               <div style={{ animationDelay: `${Math.min(i, 8) * 0.04}s` }}>
                 {/* gradient cap */}
                 <div className={`relative h-16 bg-gradient-to-r ${ACCENT[c.tone]}`}>
@@ -292,6 +297,7 @@ export default function CastingBoardPage() {
                 </div>
               </div>
             </Card>
+            </Tilt>
           );
         })}
       </div>

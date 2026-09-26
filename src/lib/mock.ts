@@ -5,6 +5,7 @@
 // offline gradient MediaPlaceholder.
 // ─────────────────────────────────────────────────────────────
 
+import type { ClipId } from "./clips";
 import type { FeedPost } from "@/components/PostCard";
 import type { MediaItem, MediaTone } from "./types";
 
@@ -82,6 +83,7 @@ export const MOCK_POSTS: FeedPost[] = [
     timeAgo: "5h",
     text: "Locked the Saltwater S2 teaser at 4am. Sixty seconds, no dialogue, one wave 🌊. Sometimes the cut tells you when it's done — you just have to be awake to hear it.",
     media: m("mm3", "Saltwater S2 — Teaser", "TEASER · 0:60", "2026", "midnight"),
+    clip: "cosmos-eye",
     likes: 856,
     comments: 44,
     liked: false,
@@ -93,6 +95,7 @@ export const MOCK_POSTS: FeedPost[] = [
     timeAgo: "9h",
     text: "Day 40 of 42 on 'Half Light' 🎥 Kabir lit this entire scene with one practical bulb and a bounce board, and it's the best I've ever looked on camera. Hire cinematographers who treat light like dialogue.",
     media: m("mm4", "Half Light — Day 40", "BTS", "2025", "dusk"),
+    clip: "tears-bridge",
     likes: 1241,
     comments: 72,
     liked: false,
@@ -127,6 +130,7 @@ export const MOCK_POSTS: FeedPost[] = [
     timeAgo: "2d",
     text: "'Dhaaga' crossed 62 million views 🎉 Two years since we shot it in one rained-out night in Alibaug. Dev kept saying 'the weather IS the video'. He was right.",
     media: m("mm7", "Peppermint — 'Dhaaga'", "MUSIC VIDEO", "2023", "dusk"),
+    clip: "cosmos-field",
     likes: 3520,
     comments: 203,
     liked: true,
@@ -201,6 +205,8 @@ export interface Reel {
   palette: [string, string, string];
   /** the hero prop floating in the frame */
   prop: string;
+  /** real footage playing in the frame */
+  clip: ClipId;
   /** subtitle-style line burned into the frame */
   subtitle: string;
   cta?: { label: string; href: string };
@@ -211,47 +217,47 @@ export const MOCK_REELS: Reel[] = [
     id: "reel-1", kind: "live", badge: "LIVE", title: "Casting AMA — ask me anything",
     caption: "Self-tapes, slating, what makes me stop scrolling. Drop your questions 👇 #casting #selftape",
     creatorId: "ritika-nair", audio: "Live audio · Ritika Nair", likes: 4210, comments: 612, shares: 188,
-    palette: ["#1b0f3d", "#6a1b9a", "#ff4f7b"], prop: "🎙️", subtitle: "“Slate your height. Always.”",
+    palette: ["#1b0f3d", "#6a1b9a", "#ff4f7b"], clip: "tears-bridge", prop: "🎙️", subtitle: "“Slate your height. Always.”",
     cta: { label: "Join the room", href: "/casting" },
   },
   {
     id: "reel-2", kind: "casting", badge: "CASTING", title: "Saltwater S3 is casting 4 roles",
     caption: "Goa. August. Konkani speakers, this one's yours. Tape scene 7 and slate your height 🌊 #nowcasting",
     creatorId: "ritika-nair", audio: "Saltwater — Main Titles · Nikhil Bhandari", likes: 8932, comments: 1204, shares: 902,
-    palette: ["#04162b", "#0e4c7a", "#3ddc97"], prop: "🌊", subtitle: "4 recurring roles · closes Jul 20",
+    palette: ["#04162b", "#0e4c7a", "#3ddc97"], clip: "sintel-snow", prop: "🌊", subtitle: "4 recurring roles · closes Jul 20",
     cta: { label: "Apply now", href: "/casting" },
   },
   {
     id: "reel-3", kind: "bts", badge: "BTS", title: "One bulb. One bounce. Magic.",
     caption: "Day 40 on Half Light — this whole scene was lit with a single practical. Light is dialogue 🎥",
     creatorId: "kabir-mehta", audio: "original sound · Kabir Mehta", likes: 12840, comments: 733, shares: 1450,
-    palette: ["#140a02", "#7a3b06", "#ffb13b"], prop: "💡", subtitle: "INT. KITCHEN — NIGHT",
+    palette: ["#140a02", "#7a3b06", "#ffb13b"], clip: "elephants-machine", prop: "💡", subtitle: "INT. KITCHEN — NIGHT",
   },
   {
     id: "reel-4", kind: "premiere", badge: "PREMIERE", title: "Half Light premieres tonight",
     caption: "Three years. Eleven drafts. One night. See you at MAMI ✨ #HalfLight #premiere",
     creatorId: "dev-malhotra", audio: "Half Light — Suite · Nikhil Bhandari", likes: 21304, comments: 2210, shares: 3102,
-    palette: ["#0b0b1f", "#2b1c6b", "#c94ad8"], prop: "🎬", subtitle: "MAMI Official Selection 2025",
+    palette: ["#0b0b1f", "#2b1c6b", "#c94ad8"], clip: "sintel-dragon", prop: "🎬", subtitle: "MAMI Official Selection 2025",
     cta: { label: "Get tickets", href: "/home" },
   },
   {
     id: "reel-5", kind: "audition", badge: "AUDITION", title: "60-second movement tape",
     caption: "Groundedness over tricks. The water eats anything jumpy 💃 Tag a dancer who isn't afraid to get wet",
     creatorId: "sana-iyer", audio: "Dhaaga (Sped Up) · Zoya Qureshi", likes: 6120, comments: 488, shares: 377,
-    palette: ["#1a0314", "#8a1450", "#ff9410"], prop: "💃", subtitle: "8 dancer spots · Hyderabad",
+    palette: ["#1a0314", "#8a1450", "#ff9410"], clip: "spring-forest", prop: "💃", subtitle: "8 dancer spots · Hyderabad",
     cta: { label: "Grab a spot", href: "/casting" },
   },
   {
     id: "reel-6", kind: "creator", badge: "RISING", title: "From runway to her first lead",
     caption: "Campaigns → scene study → my first feature audition. Scared? Obviously. Doing it anyway 🦋",
     creatorId: "meher-kapoor", audio: "Glow · Zoya Qureshi", likes: 18450, comments: 1532, shares: 2044,
-    palette: ["#1f0b1b", "#b8327a", "#ffd1a3"], prop: "🦋", subtitle: "56k followers · Dubai",
+    palette: ["#1f0b1b", "#b8327a", "#ffd1a3"], clip: "cosmos-field", prop: "🦋", subtitle: "56k followers · Dubai",
   },
   {
     id: "reel-7", kind: "bts", badge: "STUDIO", title: "Scratch vocals at 2am",
     caption: "Director approved take two. The 24-hour turnaround lives another week 🎧",
     creatorId: "zoya-qureshi", audio: "Raat Bhar (demo) · Zoya Qureshi", likes: 5320, comments: 290, shares: 211,
-    palette: ["#050d1c", "#123b6e", "#7ab5f5"], prop: "🎧", subtitle: "Home studio · Hyderabad",
+    palette: ["#050d1c", "#123b6e", "#7ab5f5"], clip: "llama-cliff", prop: "🎧", subtitle: "Home studio · Hyderabad",
   },
 ];
 

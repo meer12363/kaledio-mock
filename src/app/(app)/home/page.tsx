@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Avatar } from "@/components/Avatar";
 import { PostCard, type FeedPost } from "@/components/PostCard";
 import { SpotlightRail } from "@/components/SpotlightRail";
+import { CineVideo } from "@/components/CineVideo";
+import { LazyStage3D } from "@/components/Stage3DLazy";
+import type { StageProp } from "@/components/Stage3D";
 import { Button, Card, EmptyState } from "@/components/ui";
 import { useToast } from "@/components/Toast";
 import { IconClock, IconFire, IconSparkle, IconX } from "@/components/icons";
@@ -12,6 +15,7 @@ import { gql } from "@/lib/gql";
 import { useSession } from "@/lib/session";
 import { readAttachment } from "@/lib/upload";
 import { MOCK_CALLS, MOCK_PEOPLE, MOCK_POSTS } from "@/lib/mock";
+import { FOOTAGE_CREDIT } from "@/lib/clips";
 
 const EMOJI_SET = [
   "😀", "😄", "😂", "😊", "😍", "🤩", "😎", "🥳",
@@ -39,6 +43,13 @@ const TICKER = [
 
 type FeedTab = "foryou" | "following" | "casting";
 
+const STAGE_LINES: Record<StageProp, string> = {
+  clapper: "🎬 Scene 1, take 1 — ACTION!",
+  reel: "🎞️ Rolling… your reel just got 12 new views",
+  star: "🏆 And the award goes to… you, for showing up",
+  camera: "🎥 Camera's rolling — smile, casting is watching",
+};
+
 function greeting(): string {
   const h = new Date().getHours();
   if (h < 5) return "Up late";
@@ -58,7 +69,7 @@ const FEED_QUERY = /* GraphQL */ `
 `;
 
 export default function HomePage() {
-  const { user } = useSession();
+  const { user, isGuest } = useSession();
   const { toast } = useToast();
   const [realPosts, setRealPosts] = useState<FeedPost[]>([]);
   const [myPosts, setMyPosts] = useState<FeedPost[]>([]);
@@ -110,6 +121,7 @@ export default function HomePage() {
   }, []);
 
   const greet = useMemo(() => greeting(), []);
+  const onStageClick = useCallback((prop: StageProp) => toast(STAGE_LINES[prop], "accent"), [toast]);
 
   const feed = useMemo(() => {
     const all = [...realPosts, ...MOCK_POSTS];
@@ -121,7 +133,7 @@ export default function HomePage() {
   if (!user) return null;
 
   const avatarSrc = user.details.profilePicture || undefined;
-  const firstName = user.name.split(" ")[0];
+  const firstName = isGuest ? "there" : user.name.split(" ")[0];
 
   const insertEmoji = (emoji: string) => {
     const el = draftInput.current;
@@ -190,6 +202,9 @@ export default function HomePage() {
       <section className="anim-rise relative overflow-hidden rounded-[28px] border border-white/10 [background:var(--grad-hero)] grad-animate">
         <div className="absolute inset-0 opacity-50 [background:var(--grad-mesh)]" />
         <div className="absolute -right-20 -top-24 h-80 w-80 rounded-full bg-[#ff4f7b]/30 blur-3xl" />
+        {/* real footage behind the headline */}
+        <CineVideo clip="tears-canal" eager length={20} className="absolute inset-0 h-full w-full" />
+        <div className="footage-shade absolute inset-0" />
         <div className="relative grid gap-6 p-6 sm:p-9 lg:grid-cols-[1.4fr_1fr] lg:items-end">
           <div className="min-w-0">
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
@@ -214,6 +229,14 @@ export default function HomePage() {
             </div>
           </div>
 
+          <div className="min-w-0">
+          {/* interactive 3D set — click the props */}
+          <div className="relative -mx-2 -mt-4 hidden h-56 sm:block lg:-mt-10 lg:h-64">
+            <LazyStage3D className="absolute inset-0" onPropClick={onStageClick} />
+            <span className="pointer-events-none absolute bottom-1 right-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-white/55">
+              ✦ tap the props
+            </span>
+          </div>
           {/* bento stats */}
           <div className="grid grid-cols-2 gap-2.5">
             <Link href="/profile" className="press group min-w-0 rounded-2xl bg-black/30 p-3.5 backdrop-blur sm:p-4 transition-colors hover:bg-black/45">
@@ -236,6 +259,7 @@ export default function HomePage() {
               <p className="mt-1 font-display text-[22px] font-bold leading-none min-[380px]:text-[26px] sm:text-3xl text-black">12</p>
               <p className="text-[12px] font-semibold text-black/70">roles for you →</p>
             </Link>
+          </div>
           </div>
         </div>
 
@@ -522,6 +546,7 @@ export default function HomePage() {
                 ))}
               </ul>
             </Card>
+            <p className="px-2 text-[11px] leading-snug text-ink-400">{FOOTAGE_CREDIT}</p>
           </div>
         </aside>
       </div>

@@ -12,12 +12,22 @@ import { useRouter } from "next/navigation";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Splash } from "@/components/Splash";
 import { gql, ME_QUERY } from "./gql";
-import { mapMeToSessionUser } from "./persona";
+import { ensureUserShape, mapMeToSessionUser } from "./persona";
 import { supabaseBrowser } from "./supabase";
 import type { SessionUser } from "./types";
 
+/** Login is optional for now: anyone without an account browses as this guest. */
+const GUEST_USER: SessionUser = ensureUserShape({
+  name: "Guest",
+  headline: "Just looking around 👀",
+  location: "Mumbai",
+  availability: "open",
+});
+
 interface SessionContextValue {
   user: SessionUser | null;
+  /** true while browsing without an account */
+  isGuest: boolean;
   ready: boolean;
   /** true when Supabase has an authenticated session but no Kaledio profile exists yet
    *  (e.g. fresh Google sign-in) — the app should route these to /onboarding, not /login */
@@ -36,6 +46,7 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<SessionUser | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const [ready, setReady] = useState(false);
   const [loader, setLoader] = useState<{ path: string; message: string } | null>(null);
@@ -45,12 +56,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-    const supabase = supabaseBrowser();
-
     const hydrate = async (hasSession: boolean) => {
       if (!hasSession) {
         if (!cancelled) {
-          setUser(null);
+          setUser(GUEST_USER);
+          setIsGuest(true);
           setNeedsOnboarding(false);
         }
         return;
@@ -60,24 +70,41 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         if (cancelled) return;
         if (me) {
           setUser(mapMeToSessionUser(me));
+          setIsGuest(false);
           setNeedsOnboarding(false);
         } else {
-          setUser(null);
+          setUser(GUEST_USER);
+          setIsGuest(true);
           setNeedsOnboarding(true);
         }
       } catch {
         if (!cancelled) {
-          setUser(null);
+          setUser(GUEST_USER);
+          setIsGuest(true);
           setNeedsOnboarding(false);
         }
       }
     };
 
-    supabase.auth.getSession().then(({ data }) => {
-      hydrate(!!data.session).finally(() => {
+    let supabase: ReturnType<typeof supabaseBrowser>;
+    try {
+      supabase = supabaseBrowser();
+    } catch {
+      // Supabase isn't configured (e.g. missing env vars) — run as a guest
+      hydrate(false).finally(() => !cancelled && setReady(true));
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    supabase.auth
+      .getSession()
+      .then(({ data }) => hydrate(!!data.session))
+      // no Supabase config / offline: still let people in as a guest
+      .catch(() => hydrate(false))
+      .finally(() => {
         if (!cancelled) setReady(true);
       });
-    });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       hydrate(!!session);
@@ -108,6 +135,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   const signIn = useCallback((next: SessionUser) => {
     setUser(next);
+    setIsGuest(false);
     setNeedsOnboarding(false);
   }, []);
 
@@ -115,12 +143,18 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     supabaseBrowser()
       .auth.signOut()
       .finally(() => {
-        setUser(null);
+        setUser(GUEST_USER);
+        setIsGuest(true);
         setNeedsOnboarding(false);
       });
   }, []);
 
   const update = useCallback(async (patch: Partial<SessionUser>) => {
+    if (isGuest) {
+      // nothing to save to — keep guest edits in memory for this visit
+      setUser((u) => (u ? { ...u, ...patch, details: { ...u.details, ...patch.details } } : u));
+      return;
+    }
     const { updateProfile } = await gql<{ updateProfile: Parameters<typeof mapMeToSessionUser>[0] }>(
       `mutation($patch: String!) {
         updateProfile(patch: $patch) {
@@ -137,7 +171,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       { patch: JSON.stringify(patch) }
     );
     setUser(mapMeToSessionUser(updateProfile));
-  }, []);
+  }, [isGuest]);
 
   const cut = useCallback(
     (path: string, message: string) => {
@@ -153,8 +187,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ user, ready, needsOnboarding, signIn, signOut, update, cut }),
-    [user, ready, needsOnboarding, signIn, signOut, update, cut]
+    () => ({ user, isGuest, ready, needsOnboarding, signIn, signOut, update, cut }),
+    [user, isGuest, ready, needsOnboarding, signIn, signOut, update, cut]
   );
 
   return (

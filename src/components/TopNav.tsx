@@ -49,7 +49,7 @@ const MOBILE_RIGHT = [
 export function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, signOut } = useSession();
+  const { user, isGuest, signOut } = useSession();
   const { toast } = useToast();
   const [unread, setUnread] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -277,18 +277,43 @@ export function TopNav() {
                   <div className="my-1 border-t border-line" />
                   <ThemeToggle variant="row" />
                   <div className="my-1 border-t border-line" />
-                  <button
-                    role="menuitem"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      toast("Signed out — see you on set 🎬", "accent");
-                      signOut();
-                      router.push("/");
-                    }}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-900/[0.04] hover:text-danger"
-                  >
-                    <IconLogout size={17} /> Sign out
-                  </button>
+                  {isGuest ? (
+                    <div className="grid grid-cols-2 gap-1.5 p-1">
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          router.push("/login");
+                        }}
+                        className="rounded-lg border border-line-strong px-2.5 py-2 text-sm font-semibold text-ink-700 transition-colors hover:border-ink-400 hover:text-ink-900"
+                      >
+                        Log in
+                      </button>
+                      <button
+                        role="menuitem"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          router.push("/signup");
+                        }}
+                        className="rounded-lg bg-volt px-2.5 py-2 text-sm font-bold text-black transition-opacity hover:opacity-90"
+                      >
+                        Join free
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        toast("Signed out — see you on set 🎬", "accent");
+                        signOut();
+                        router.push("/");
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-900/[0.04] hover:text-danger"
+                    >
+                      <IconLogout size={17} /> Sign out
+                    </button>
+                  )}
                 </div>
               )}
             </div>

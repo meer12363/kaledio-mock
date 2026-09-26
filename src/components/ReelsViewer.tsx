@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Avatar } from "./Avatar";
+import { CineVideo } from "./CineVideo";
 import { useToast } from "./Toast";
 import { IconBookmark, IconComment, IconHeart, IconSend, IconShare, IconX } from "./icons";
 import { MOCK_PEOPLE, MOCK_REELS, type Reel } from "@/lib/mock";
@@ -54,6 +55,7 @@ function ReelsOverlay({ startIndex, onClose }: { startIndex: number; onClose: ()
   const [burst, setBurst] = useState<string | null>(null);
   const [sheetFor, setSheetFor] = useState<Reel | null>(null);
   const [hint, setHint] = useState(true);
+  const onAutoMuted = useCallback(() => setMuted(true), []);
   const clickTimer = useRef<number | null>(null);
   const heartSeq = useRef(0);
 
@@ -241,7 +243,7 @@ function ReelsOverlay({ startIndex, onClose }: { startIndex: number; onClose: ()
                   className="absolute left-[18%] top-[55%] h-40 w-40 rounded-full opacity-60 blur-3xl"
                   style={{ background: c2, animation: "float-soft 6s ease-in-out infinite", animationPlayState: running ? "running" : "paused" }}
                 />
-                {/* the hero prop */}
+                {/* the hero prop (shows until the footage is ready) */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span
                     className="select-none text-[120px] drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)] md:text-[140px]"
@@ -250,6 +252,18 @@ function ReelsOverlay({ startIndex, onClose }: { startIndex: number; onClose: ()
                     {reel.prop}
                   </span>
                 </div>
+                {/* real footage — loads for the reel on screen and its neighbours */}
+                {Math.abs(i - active) <= 1 && (
+                  <CineVideo
+                    clip={reel.clip}
+                    eager
+                    playing={running}
+                    muted={muted}
+                    length={DURATION / 1000 + 2}
+                    onAutoMuted={onAutoMuted}
+                    className="absolute inset-0 h-full w-full"
+                  />
+                )}
                 {/* subtitle burned in */}
                 <div className="absolute inset-x-0 top-[62%] flex justify-center px-8">
                   <span className="rounded bg-black/55 px-2.5 py-1 text-center font-mono text-[12px] tracking-wide text-white/90">

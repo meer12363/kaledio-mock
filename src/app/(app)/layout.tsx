@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { TopNav } from "@/components/TopNav";
 import { ToastProvider } from "@/components/Toast";
 import { WelcomeModal } from "@/components/WelcomeModal";
@@ -12,13 +10,8 @@ import { ReelsViewer } from "@/components/ReelsViewer";
 import { useSession } from "@/lib/session";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user, ready, needsOnboarding } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!ready || user) return;
-    router.replace(needsOnboarding ? "/onboarding" : "/login");
-  }, [ready, user, needsOnboarding, router]);
+  // no login wall: signed-out visitors get a guest session (see lib/session)
+  const { user, ready } = useSession();
 
   if (!ready || !user) {
     return <div className="min-h-dvh bg-canvas" aria-hidden="true" />;

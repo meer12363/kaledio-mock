@@ -1,7 +1,9 @@
 "use client";
 
 import { MOCK_PEOPLE, MOCK_REELS } from "@/lib/mock";
+import { useState } from "react";
 import { Avatar } from "./Avatar";
+import { CineVideo } from "./CineVideo";
 import { IconPlay, IconPlus } from "./icons";
 import { openReels } from "./ReelsViewer";
 
@@ -9,6 +11,8 @@ const fmt = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(n);
 
 export function SpotlightRail() {
+  // one preview plays at a time: whichever thumbnail the pointer is on (first one by default)
+  const [hovered, setHovered] = useState(0);
   return (
     <section className="anim-rise">
       <div className="mb-3 flex items-end justify-between px-1">
@@ -45,6 +49,7 @@ export function SpotlightRail() {
             <button
               key={r.id}
               onClick={() => openReels(i)}
+              onPointerEnter={() => setHovered(i)}
               className="press group relative aspect-[9/16] w-[128px] shrink-0 snap-start overflow-hidden rounded-2xl text-left ring-1 ring-white/10 transition-transform duration-300 hover:-translate-y-1 hover:ring-white/30"
               style={{ background: c0 }}
             >
@@ -59,6 +64,12 @@ export function SpotlightRail() {
               <span className="absolute inset-0 flex items-center justify-center text-5xl transition-transform duration-500 group-hover:scale-125">
                 {r.prop}
               </span>
+              <CineVideo
+                clip={r.clip}
+                playing={hovered === i}
+                length={8}
+                className="absolute inset-0 h-full w-full transition-transform duration-500 group-hover:scale-110"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/40" />
 
               {/* badge */}
