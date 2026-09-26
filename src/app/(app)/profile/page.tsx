@@ -7,6 +7,7 @@ import { Card, Skeleton } from "@/components/ui";
 import { IconCheck, IconEdit } from "@/components/icons";
 import { AVAILABILITY_META } from "@/components/ui";
 import { useSession } from "@/lib/session";
+import { ProfileStrengthCard } from "@/components/ProfileScore";
 import { gql, ME_FIELDS } from "@/lib/gql";
 import type { Availability, Credit, MediaItem, ProfileDetails } from "@/lib/types";
 
@@ -41,6 +42,18 @@ interface MeRich {
   portfolio: MediaItem[];
 }
 
+const EMPTY_RICH: MeRich = {
+  yearsExp: 0,
+  skills: [],
+  connections: 0,
+  hue: 3,
+  reelTitle: "",
+  reelDuration: "",
+  avatarUrl: "",
+  credits: [],
+  portfolio: [],
+};
+
 export default function MyProfilePage() {
   const { user, update } = useSession();
   const [rich, setRich] = useState<MeRich | null>(null);
@@ -50,8 +63,9 @@ export default function MyProfilePage() {
       `${ME_FIELDS}
       query { me { ...MeFields } }`
     )
-      .then((d) => setRich(d.me))
-      .catch(() => setRich(null));
+      // guests (and brand-new profiles) have no stored extras yet — start empty
+      .then((d) => setRich(d.me ?? EMPTY_RICH))
+      .catch(() => setRich(EMPTY_RICH));
   }, [user?.headline, user?.bio]);
 
   if (!user) return null;
@@ -125,6 +139,9 @@ export default function MyProfilePage() {
 
   return (
     <>
+      <div className="mx-auto mb-5 max-w-4xl">
+        <ProfileStrengthCard compact />
+      </div>
       <ProfileView
         profile={profile}
         avatarSrc={rich.avatarUrl || d.profilePicture || undefined}

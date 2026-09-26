@@ -20,6 +20,7 @@ import {
 } from "./icons";
 import { useSession } from "@/lib/session";
 import { useToast } from "./Toast";
+import { useProfileScore } from "./ProfileScore";
 import { ThemeToggle } from "./ThemeToggle";
 import { gql } from "@/lib/gql";
 import { AVAILABILITY_META } from "./ui";
@@ -50,6 +51,7 @@ export function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isGuest, signOut } = useSession();
+  const score = useProfileScore();
   const { toast } = useToast();
   const [unread, setUnread] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -256,6 +258,23 @@ export function TopNav() {
                     <span className={`h-1.5 w-1.5 rounded-full ${availability.dot}`} />
                     {availability.label}
                   </div>
+                  {score && score.score < 100 && (
+                    <Link
+                      href={`/profile/edit#${score.next[0].section}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="mx-1 mb-2 block rounded-xl bg-ink-900/[0.04] px-3 py-2.5 transition-colors hover:bg-ink-900/[0.07]"
+                    >
+                      <span className="flex items-center justify-between text-[12px] font-bold text-ink-800">
+                        <span>
+                          Profile {score.score}/100 {score.tier.emoji}
+                        </span>
+                        <span className="text-volt-ink">Finish →</span>
+                      </span>
+                      <span className="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-canvas">
+                        <span className="block h-full rounded-full [background:var(--grad-volt)]" style={{ width: `${score.score}%` }} />
+                      </span>
+                    </Link>
+                  )}
                   <div className="my-1 border-t border-line" />
                   {[
                     { label: "View profile", Icon: IconUser, href: "/profile" },

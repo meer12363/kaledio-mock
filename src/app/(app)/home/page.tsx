@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/Avatar";
 import { PostCard, type FeedPost } from "@/components/PostCard";
 import { SpotlightRail } from "@/components/SpotlightRail";
+import { ProfileStrengthCard } from "@/components/ProfileScore";
 import { CineVideo } from "@/components/CineVideo";
 import { LazyStage3D } from "@/components/Stage3DLazy";
 import type { StageProp } from "@/components/Stage3D";
@@ -283,9 +284,100 @@ export default function HomePage() {
       {/* ═════════ reels ═════════ */}
       <SpotlightRail />
 
-      {/* ═════════ feed + side column ═════════ */}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      {/* ═════════ side column + feed ═════════ */}
+      <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
+        {/* ═════════ left column: goals, deadlines, people ═════════ */}
+        <aside className="hidden lg:block">
+          <div className="no-scrollbar sticky top-[96px] max-h-[calc(100dvh-112px)] space-y-4 overflow-y-auto pb-4">
+            <ProfileStrengthCard />
+            {/* daily goals */}
+            <Card className="overflow-hidden">
+              <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+                <IconFire size={16} className="text-accent-500" />
+                <p className="font-display text-[15px] font-bold text-ink-900">Daily goals</p>
+                <span className="ml-auto rounded-full bg-volt px-2 py-0.5 font-mono text-[10.5px] font-bold text-black">2/3</span>
+              </div>
+              <ul className="space-y-2.5 p-4">
+                {[
+                  { done: true, label: "Check your feed" },
+                  { done: true, label: "React to 3 posts" },
+                  { done: false, label: "Apply to a casting call" },
+                ].map((g) => (
+                  <li key={g.label} className="flex items-center gap-2.5 text-[13.5px]">
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-bold ${
+                        g.done ? "bg-volt text-black" : "border border-line-strong text-transparent"
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <span className={g.done ? "text-ink-400 line-through" : "font-semibold text-ink-900"}>{g.label}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="px-4 pb-4">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-canvas">
+                  <div className="h-full rounded-full [background:var(--grad-volt)]" style={{ width: "66%" }} />
+                </div>
+                <p className="mt-2 text-[12px] text-ink-500">One more to keep the 🔥 alive.</p>
+              </div>
+            </Card>
+
+            {/* closing soon */}
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <p className="eyebrow">Closing soon</p>
+                <IconClock size={15} className="text-ink-400" />
+              </div>
+              <ul className="mt-3 space-y-1">
+                {MOCK_CALLS.slice(0, 4).map((c) => (
+                  <li key={c.id}>
+                    <Link href="/casting" className="group flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-ink-900/[0.03]">
+                      <span className="mt-0.5 rounded-md bg-accent-50 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-600">{c.deadline}</span>
+                      <span className="min-w-0">
+                        <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink-800 group-hover:text-ink-900">{c.title}</span>
+                        <span className="mt-0.5 block text-[11.5px] text-ink-500">
+                          {c.medium} · {c.location}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/casting" className="mt-2 block border-t border-line px-2 pt-3 text-[13px] font-bold text-volt-ink hover:underline">
+                Open the board →
+              </Link>
+            </Card>
+
+            {/* people */}
+            <Card className="p-4">
+              <p className="eyebrow">Rising this week</p>
+              <ul className="mt-3 space-y-1">
+                {MOCK_PEOPLE.slice(0, 5).map((p, i) => (
+                  <li key={p.id}>
+                    <Link href={`/profile/${p.id}`} className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-ink-900/[0.03]">
+                      <span className="w-4 font-mono text-[11px] font-bold text-ink-400">{String(i + 1).padStart(2, "0")}</span>
+                      <Avatar name={p.name} hue={p.hue} size={34} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[13px] font-bold text-ink-900">{p.name}</span>
+                        <span className="block truncate text-[11.5px] text-ink-500">{p.roles.join(" · ")}</span>
+                      </span>
+                      <span className="font-mono text-[11px] font-bold text-go">{p.followers}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+            <p className="px-2 text-[11px] leading-snug text-ink-400">{FOOTAGE_CREDIT}</p>
+          </div>
+        </aside>
+
         <section className="min-w-0 space-y-4">
+          {/* phones don't get the left column — keep the profile nudge */}
+          <div className="lg:hidden">
+            <ProfileStrengthCard compact />
+          </div>
+
           {/* composer */}
           <div ref={composerRef} className="scroll-mt-28">
             <Card className={`overflow-hidden p-4 transition-shadow ${composing ? "grad-border shadow-glow-accent" : ""}`}>
@@ -465,90 +557,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ═════════ side column ═════════ */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-[96px] space-y-4">
-            {/* daily goals */}
-            <Card className="overflow-hidden">
-              <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-                <IconFire size={16} className="text-accent-500" />
-                <p className="font-display text-[15px] font-bold text-ink-900">Daily goals</p>
-                <span className="ml-auto rounded-full bg-volt px-2 py-0.5 font-mono text-[10.5px] font-bold text-black">2/3</span>
-              </div>
-              <ul className="space-y-2.5 p-4">
-                {[
-                  { done: true, label: "Check your feed" },
-                  { done: true, label: "React to 3 posts" },
-                  { done: false, label: "Apply to a casting call" },
-                ].map((g) => (
-                  <li key={g.label} className="flex items-center gap-2.5 text-[13.5px]">
-                    <span
-                      className={`flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-bold ${
-                        g.done ? "bg-volt text-black" : "border border-line-strong text-transparent"
-                      }`}
-                    >
-                      ✓
-                    </span>
-                    <span className={g.done ? "text-ink-400 line-through" : "font-semibold text-ink-900"}>{g.label}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="px-4 pb-4">
-                <div className="h-2 w-full overflow-hidden rounded-full bg-canvas">
-                  <div className="h-full rounded-full [background:var(--grad-volt)]" style={{ width: "66%" }} />
-                </div>
-                <p className="mt-2 text-[12px] text-ink-500">One more to keep the 🔥 alive.</p>
-              </div>
-            </Card>
-
-            {/* closing soon */}
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="eyebrow">Closing soon</p>
-                <IconClock size={15} className="text-ink-400" />
-              </div>
-              <ul className="mt-3 space-y-1">
-                {MOCK_CALLS.slice(0, 4).map((c) => (
-                  <li key={c.id}>
-                    <Link href="/casting" className="group flex items-start gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-ink-900/[0.03]">
-                      <span className="mt-0.5 rounded-md bg-accent-50 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent-600">{c.deadline}</span>
-                      <span className="min-w-0">
-                        <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink-800 group-hover:text-ink-900">{c.title}</span>
-                        <span className="mt-0.5 block text-[11.5px] text-ink-500">
-                          {c.medium} · {c.location}
-                        </span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/casting" className="mt-2 block border-t border-line px-2 pt-3 text-[13px] font-bold text-volt-ink hover:underline">
-                Open the board →
-              </Link>
-            </Card>
-
-            {/* people */}
-            <Card className="p-4">
-              <p className="eyebrow">Rising this week</p>
-              <ul className="mt-3 space-y-1">
-                {MOCK_PEOPLE.slice(0, 5).map((p, i) => (
-                  <li key={p.id}>
-                    <Link href={`/profile/${p.id}`} className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-ink-900/[0.03]">
-                      <span className="w-4 font-mono text-[11px] font-bold text-ink-400">{String(i + 1).padStart(2, "0")}</span>
-                      <Avatar name={p.name} hue={p.hue} size={34} />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-bold text-ink-900">{p.name}</span>
-                        <span className="block truncate text-[11.5px] text-ink-500">{p.roles.join(" · ")}</span>
-                      </span>
-                      <span className="font-mono text-[11px] font-bold text-go">{p.followers}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-            <p className="px-2 text-[11px] leading-snug text-ink-400">{FOOTAGE_CREDIT}</p>
-          </div>
-        </aside>
       </div>
     </div>
   );

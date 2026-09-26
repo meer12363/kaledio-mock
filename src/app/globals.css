@@ -447,3 +447,9 @@ html[data-theme="light"] .tilt-3d-glare { mix-blend-mode: normal; background: ra
 @media (prefers-reduced-motion: reduce) {
   .tilt-3d-inner { transform: none !important; }
 }
+
+@keyframes confetti-fall {
+  0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(110vh) rotate(540deg); }
+}
