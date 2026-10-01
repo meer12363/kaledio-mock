@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Avatar } from "@/components/Avatar";
-import { Button, Card, Chip, EmptyState, Tag } from "@/components/ui";
+import { Button, Chip, EmptyState } from "@/components/ui";
 import { useToast } from "@/components/Toast";
 import { CineVideo } from "@/components/CineVideo";
-import { Tilt } from "@/components/Tilt";
-import { IconBookmark, IconCheck, IconClapper, IconClock, IconFire, IconMapPin, IconSearch, IconUsers } from "@/components/icons";
+import { CallSheetCard } from "@/components/CallSheet";
+import { recordApplication, useApplications } from "@/lib/applied";
+import { IconClapper, IconFire, IconSearch } from "@/components/icons";
 import { gql } from "@/lib/gql";
 import { MOCK_CALLS, MOCK_PEOPLE, type MockCall } from "@/lib/mock";
 import type { MediaTone } from "@/lib/types";
@@ -19,6 +19,7 @@ interface CardData {
   location: string;
   compensation: string;
   deadline: string;
+  deadlineISO?: string;
   tags: string[];
   applicants: number;
   postedAgo: string;
@@ -32,15 +33,6 @@ interface CardData {
 const MEDIUMS = ["All", "Feature Film", "OTT Series", "TV Series", "Ad Film", "Music Video", "Theatre", "Short Film"];
 const LOCATIONS = ["All", "Mumbai", "Delhi", "Hyderabad", "Chennai", "Goa", "London", "Berlin", "Remote"];
 
-const ACCENT: Record<MediaTone, string> = {
-  midnight: "from-[#070b24] to-[#2b2a8f]",
-  steel: "from-[#03161f] to-[#0e6b73]",
-  sky: "from-[#061a3d] to-[#2f7fe6]",
-  noir: "from-black to-[#3a2a1c]",
-  porcelain: "from-[#2a0f1f] to-[#c9557a]",
-  dusk: "from-[#1a0620] to-[#b8327a]",
-};
-
 function fromMock(c: MockCall): CardData {
   const p = MOCK_PEOPLE.find((x) => x.id === c.postedById);
   return {
@@ -51,6 +43,7 @@ function fromMock(c: MockCall): CardData {
     location: c.location,
     compensation: c.compensation,
     deadline: c.deadline,
+    deadlineISO: c.deadlineISO,
     tags: c.tags,
     applicants: c.applicants,
     postedAgo: c.postedAgo,
@@ -68,7 +61,7 @@ export default function CastingBoardPage() {
   const [medium, setMedium] = useState("All");
   const [location, setLocation] = useState("All");
   const [query, setQuery] = useState("");
-  const [applied, setApplied] = useState<Set<string>>(new Set());
+  const applications = useApplications();
   const [saved, setSaved] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -116,9 +109,9 @@ export default function CastingBoardPage() {
   const totalRoles = all.reduce((s, c) => s + c.roles, 0);
 
   const apply = (c: CardData) => {
-    if (applied.has(c.id)) return;
-    setApplied((s) => new Set(s).add(c.id));
-    toast(`Applied to “${c.title.slice(0, 28)}…” — good luck! 🎬`, "accent");
+    if (applications[c.id]) return;
+    recordApplication(c.id);
+    toast(`Sent. ${c.company.split(" ")[0]} will see your profile first thing`, "success");
     if (!c.id.startsWith("mock-")) {
       gql(`mutation($id: ID!) { applyToCasting(id: $id) { id } }`, { id: c.id }).catch(() => {});
     }
@@ -211,95 +204,17 @@ export default function CastingBoardPage() {
           </div>
         )}
 
-        {filtered.map((c, i) => {
-          const isApplied = applied.has(c.id);
-          const isSaved = saved.has(c.id);
-          const fillingFast = c.applicants > 200;
-          return (
-            <Tilt key={c.id} className="anim-rise" max={7}>
-            <Card interactive className="h-full overflow-hidden">
-              <div style={{ animationDelay: `${Math.min(i, 8) * 0.04}s` }}>
-                {/* gradient cap */}
-                <div className={`relative h-16 bg-gradient-to-r ${ACCENT[c.tone]}`}>
-                  <div className="absolute inset-0 opacity-30 [background:var(--grad-mesh)]" />
-                  <div className="absolute left-4 top-3 flex gap-1.5">
-                    {c.hot && (
-                      <span className="inline-flex items-center gap-1 rounded-md bg-volt px-2 py-0.5 font-mono text-[10px] font-bold text-black">
-                        <IconFire size={11} /> HOT
-                      </span>
-                    )}
-                    {fillingFast && (
-                      <span className="rounded-full bg-black/30 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur">
-                        Filling fast
-                      </span>
-                    )}
-                  </div>
-                  <span className="absolute right-4 top-3 rounded-full bg-black/25 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur">
-                    {c.medium}
-                  </span>
-                  <button
-                    onClick={() => save(c)}
-                    aria-label={isSaved ? "Saved" : "Save to calendar"}
-                    className="press absolute -bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-paper text-ink-500 shadow-lift transition-colors hover:text-brand-600"
-                  >
-                    <IconBookmark size={16} filled={isSaved} className={isSaved ? "text-brand-600" : ""} />
-                  </button>
-                </div>
-
-                <div className="p-4">
-                  <h2 className="text-[16px] font-bold leading-snug text-ink-900">{c.title}</h2>
-                  <div className="mt-2 flex items-center gap-2 text-[13px] text-ink-500">
-                    <Avatar name={c.byName} hue={c.byHue} size={20} />
-                    <span className="truncate font-medium text-ink-600">{c.company}</span>
-                    <span className="text-ink-300">·</span>
-                    <span className="shrink-0">{c.postedAgo} ago</span>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[13px] text-ink-500">
-                    <span className="flex items-center gap-1.5">
-                      <IconMapPin size={14} /> {c.location}
-                    </span>
-                    <span className="flex items-center gap-1.5 font-semibold text-accent-700">
-                      <IconClock size={14} /> {c.deadline}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <IconUsers size={14} /> {c.applicants}
-                    </span>
-                  </div>
-
-                  <p className="mt-2 text-[13px] font-medium text-ink-700">{c.compensation}</p>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                    {c.tags.slice(0, 3).map((t) => (
-                      <Tag key={t}>{t}</Tag>
-                    ))}
-                    <span className="ml-auto rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-bold text-brand-700">
-                      {c.roles} {c.roles === 1 ? "role" : "roles"}
-                    </span>
-                  </div>
-
-                  <div className="mt-4 flex items-center gap-2">
-                    <Button
-                      variant={isApplied ? "outline" : "accent"}
-                      onClick={() => apply(c)}
-                      disabled={isApplied}
-                      className="flex-1"
-                    >
-                      {isApplied ? (
-                        <>
-                          <IconCheck size={15} /> Applied
-                        </>
-                      ) : (
-                        "Apply now"
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            </Tilt>
-          );
-        })}
+        {filtered.map((c, i) => (
+          <div key={c.id} className="anim-rise" style={{ animationDelay: `${Math.min(i, 8) * 0.04}s` }}>
+            <CallSheetCard
+              call={c}
+              applied={!!applications[c.id]}
+              saved={saved.has(c.id)}
+              onApply={() => apply(c)}
+              onSave={() => save(c)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

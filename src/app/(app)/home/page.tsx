@@ -6,6 +6,7 @@ import { Avatar } from "@/components/Avatar";
 import { PostCard, type FeedPost } from "@/components/PostCard";
 import { SpotlightRail } from "@/components/SpotlightRail";
 import { ProfileStrengthCard } from "@/components/ProfileScore";
+import { CallTime } from "@/components/CallTime";
 import { CineVideo } from "@/components/CineVideo";
 import { LazyStage3D } from "@/components/Stage3DLazy";
 import type { StageProp } from "@/components/Stage3D";
@@ -373,6 +374,9 @@ export default function HomePage() {
         </aside>
 
         <section className="min-w-0 space-y-4">
+          {/* the daily 7 PM drop */}
+          <CallTime />
+
           {/* phones don't get the left column — keep the profile nudge */}
           <div className="lg:hidden">
             <ProfileStrengthCard compact />

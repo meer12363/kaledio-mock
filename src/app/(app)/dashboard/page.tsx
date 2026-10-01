@@ -109,16 +109,16 @@ interface CustomEventRow {
 const MOCK_APPS: AppRow[] = [
   {
     id: "mock-app-1", status: "audition_requested", appliedAgo: "5d ago",
-    auditionDate: "Jul 18, 2026 · 11:00", auditionISO: "2026-07-18",
-    call: { id: "mock-call-1", title: "Supporting cast (4) — 'Saltwater' S3", company: "Hoiche Originals", medium: "OTT Series", location: "Goa", deadline: "Jul 20", shootDates: "Aug–Dec 2026", shootStartISO: "2026-08-03", requiresAudition: true },
+    auditionDate: "Oct 16, 2026 · 11:00", auditionISO: "2026-10-16",
+    call: { id: "mock-call-1", title: "Saltwater S3: supporting cast (4)", company: "Hoiche Originals", medium: "OTT Series", location: "Goa", deadline: "Oct 20", shootDates: "Dec 1 to Mar 15", shootStartISO: "2026-12-01", requiresAudition: true },
   },
   {
     id: "mock-app-2", status: "applied", appliedAgo: "3d ago",
-    call: { id: "mock-call-3", title: "Two faces, 25–35 — skincare campaign", company: "Auréa", medium: "Ad Film", location: "London", deadline: "Jul 15", shootDates: "Jul 24–25", shootStartISO: "2026-07-24", requiresAudition: false },
+    call: { id: "mock-call-3", title: "Two faces, 25 to 35, for a skincare ad", company: "Auréa", medium: "Ad Film", location: "Mumbai", deadline: "Oct 9", shootDates: "Oct 21 to 22", shootStartISO: "2026-10-21", requiresAudition: false },
   },
   {
     id: "mock-app-3", status: "finalized", appliedAgo: "2w ago",
-    call: { id: "mock-call-8", title: "Ensemble (6) — 'Gulmohar Lane' revival", company: "Aranya Theatre", medium: "Theatre", location: "Mumbai", deadline: "Aug 5", shootDates: "Oct–Dec 2026", shootStartISO: "2026-09-01", requiresAudition: true },
+    call: { id: "mock-call-8", title: "Gulmohar Lane revival: ensemble (6)", company: "Aranya Theatre", medium: "Theatre", location: "Mumbai", deadline: "Nov 5", shootDates: "Rehearsals from Nov 15", shootStartISO: "2026-11-15", requiresAudition: true },
   },
 ];
 
@@ -396,7 +396,7 @@ const mockApplicant = (idx: number, status: ApplicationStatus, appliedAgo: strin
 const MOCK_LISTINGS: ListingRow[] = [
   {
     id: "mock-listing-1", title: "Supporting cast (3) — anthology 'Glass Harbour'", medium: "Feature Film", location: "Mumbai",
-    compensation: "Paid — union rates", shootDates: "Nov 2 – Dec 14, 2026", deadline: "Aug 15", description: "Three interlocking stories set around a container port.",
+    compensation: "Paid — union rates", shootDates: "Nov 2 – Dec 14, 2026", deadline: "Oct 30", description: "Three interlocking stories set around a container port.",
     requiresAudition: true, postedAgo: "4d ago",
     applicants: [
       mockApplicant(0, "audition_requested", "3d ago", "Konkani-accented Hindi is no problem — happy to tape any scene."),

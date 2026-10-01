@@ -26,7 +26,7 @@ const STAGE_LINES: Record<StageProp, string> = {
 };
 
 const SHOWING: Array<{ clip: ClipId; tag: string; title: string; meta: string; href: string }> = [
-  { clip: "tears-bridge", tag: "Casting", title: "Saltwater S3 — 4 recurring roles", meta: "OTT Series · Goa · closes Jul 20", href: "/casting" },
+  { clip: "tears-bridge", tag: "Casting", title: "Saltwater S3, 4 recurring roles", meta: "OTT Series · Goa · closes Oct 20", href: "/casting" },
   { clip: "sintel-dragon", tag: "Premiere", title: "Half Light — premieres tonight", meta: "Feature · MAMI Official Selection", href: "/home" },
   { clip: "spring-forest", tag: "Audition", title: "8 dancers for a flooded-warehouse MV", meta: "Music Video · Hyderabad · ₹18k/day", href: "/casting" },
 ];

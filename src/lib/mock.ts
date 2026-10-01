@@ -61,8 +61,8 @@ export const MOCK_POSTS: FeedPost[] = [
     likes: 428,
     comments: 63,
     liked: false,
-    castingTitle: "Saltwater S3 — 4 recurring roles",
-    castingMeta: "OTT Series · Goa · closes Jul 20",
+    castingTitle: "Saltwater S3, 4 recurring roles",
+    castingMeta: "OTT Series · Goa · closes Oct 20",
     castingCallId: "mock-call-1",
   },
   {
@@ -119,8 +119,8 @@ export const MOCK_POSTS: FeedPost[] = [
     likes: 478,
     comments: 51,
     liked: false,
-    castingTitle: "Peppermint MV — 8 dancers",
-    castingMeta: "Music Video · Hyderabad · closes Jul 22",
+    castingTitle: "Peppermint MV, 8 dancers",
+    castingMeta: "Music Video · Hyderabad · closes Oct 14",
     castingCallId: "mock-call-4",
   },
   {
@@ -147,7 +147,10 @@ export interface MockCall {
   medium: string;
   location: string;
   compensation: string;
+  /** display date */
   deadline: string;
+  /** machine date for countdowns (YYYY-MM-DD) */
+  deadlineISO: string;
   tags: string[];
   applicants: number;
   postedAgo: string;
@@ -157,15 +160,89 @@ export interface MockCall {
 }
 
 export const MOCK_CALLS: MockCall[] = [
-  { id: "mock-call-1", title: "Supporting cast (4) — 'Saltwater' S3", company: "Hoiche Originals × Ashvattha", postedById: "ritika-nair", medium: "OTT Series", location: "Goa", compensation: "Paid — union rates", deadline: "Jul 20", tags: ["Recurring", "Paid", "Konkani"], applicants: 231, postedAgo: "1d", tone: "steel", hot: true, roles: 4 },
-  { id: "mock-call-2", title: "Female lead, 28–38 — 'Monsoon Chess'", company: "Ashvattha Films", postedById: "ritika-nair", medium: "Feature Film", location: "Mumbai", compensation: "Paid — ₹12L, 42 days", deadline: "Jul 28", tags: ["Lead", "Paid", "Festival"], applicants: 148, postedAgo: "3d", tone: "midnight", hot: true, roles: 2 },
-  { id: "mock-call-3", title: "Two faces, 25–35 — skincare campaign", company: "Auréa / Bloomfield", postedById: "meher-kapoor", medium: "Ad Film", location: "London", compensation: "Paid — £4,000 + usage", deadline: "Jul 15", tags: ["Commercial", "Paid"], applicants: 312, postedAgo: "5d", tone: "porcelain", roles: 2 },
-  { id: "mock-call-4", title: "8 dancers + asst. choreographer", company: "Peppermint / Studio Vermilion", postedById: "sana-iyer", medium: "Music Video", location: "Hyderabad", compensation: "Paid — ₹18k/day", deadline: "Jul 22", tags: ["Dance", "Paid"], applicants: 96, postedAgo: "2d", tone: "dusk", roles: 9 },
-  { id: "mock-call-5", title: "Negative lead, 35–50 — 'Crosswind' reboot", company: "Sterling Television", postedById: "vikram-sethi", medium: "TV Series", location: "Mumbai", compensation: "Paid — monthly contract", deadline: "Jul 30", tags: ["TV", "Paid", "Lead"], applicants: 119, postedAgo: "4d", tone: "noir", roles: 1 },
-  { id: "mock-call-6", title: "Cinematographer — festival short 'Ledger'", company: "Turmeric Pictures", postedById: "vikram-sethi", medium: "Short Film", location: "Delhi", compensation: "Paid — ₹1.8L, 8 days", deadline: "Aug 20", tags: ["Crew", "Paid", "Night shoot"], applicants: 41, postedAgo: "8h", tone: "midnight", hot: true, roles: 1 },
-  { id: "mock-call-7", title: "Voice cast (3) — 'The Paper Kite 2'", company: "Lantern Animation", postedById: "ritika-nair", medium: "Feature Film", location: "Remote / Chennai", compensation: "Paid — session rates", deadline: "Aug 12", tags: ["Voice", "Paid", "Remote"], applicants: 74, postedAgo: "12h", tone: "sky", roles: 3 },
-  { id: "mock-call-8", title: "Ensemble (6) — 'Gulmohar Lane' revival", company: "Aranya Theatre Collective", postedById: "vikram-sethi", medium: "Theatre", location: "Mumbai", compensation: "Paid — per-show + stipend", deadline: "Aug 5", tags: ["Theatre", "Open audition"], applicants: 187, postedAgo: "6d", tone: "dusk", roles: 6 },
+  { id: "mock-call-1", title: "Saltwater S3: supporting cast (4)", company: "Hoiche Originals × Ashvattha", postedById: "ritika-nair", medium: "OTT Series", location: "Goa", compensation: "Union rates", deadline: "Oct 20", deadlineISO: "2026-10-20", tags: ["Recurring", "Paid", "Konkani"], applicants: 231, postedAgo: "1d", tone: "steel", hot: true, roles: 4 },
+  { id: "mock-call-2", title: "Monsoon Chess: female lead, 28 to 38", company: "Ashvattha Films", postedById: "ritika-nair", medium: "Feature Film", location: "Mumbai", compensation: "₹12L for 42 days", deadline: "Oct 28", deadlineISO: "2026-10-28", tags: ["Lead", "Paid", "Festival"], applicants: 148, postedAgo: "3d", tone: "midnight", hot: true, roles: 2 },
+  { id: "mock-call-3", title: "Two faces, 25 to 35, for a skincare ad", company: "Auréa / Bloomfield", postedById: "meher-kapoor", medium: "Ad Film", location: "Mumbai", compensation: "₹1.5L + usage", deadline: "Oct 9", deadlineISO: "2026-10-09", tags: ["Commercial", "Paid"], applicants: 312, postedAgo: "5d", tone: "porcelain", roles: 2 },
+  { id: "mock-call-4", title: "8 dancers and an assistant choreographer", company: "Peppermint / Studio Vermilion", postedById: "sana-iyer", medium: "Music Video", location: "Hyderabad", compensation: "₹18k a day", deadline: "Oct 14", deadlineISO: "2026-10-14", tags: ["Dance", "Paid"], applicants: 96, postedAgo: "2d", tone: "dusk", roles: 9 },
+  { id: "mock-call-5", title: "Crosswind reboot: negative lead, 35 to 50", company: "Sterling Television", postedById: "vikram-sethi", medium: "TV Series", location: "Mumbai", compensation: "Monthly contract", deadline: "Nov 2", deadlineISO: "2026-11-02", tags: ["TV", "Paid", "Lead"], applicants: 119, postedAgo: "4d", tone: "noir", roles: 1 },
+  { id: "mock-call-6", title: "DoP for the festival short Ledger", company: "Turmeric Pictures", postedById: "vikram-sethi", medium: "Short Film", location: "Mumbai", compensation: "₹1.8L for 8 days", deadline: "Oct 18", deadlineISO: "2026-10-18", tags: ["Crew", "Paid", "Night shoot"], applicants: 41, postedAgo: "8h", tone: "midnight", hot: true, roles: 1 },
+  { id: "mock-call-7", title: "The Paper Kite 2: voice cast (3)", company: "Lantern Animation", postedById: "ritika-nair", medium: "Feature Film", location: "Remote / Chennai", compensation: "Session rates", deadline: "Nov 12", deadlineISO: "2026-11-12", tags: ["Voice", "Paid", "Remote"], applicants: 74, postedAgo: "12h", tone: "sky", roles: 3 },
+  { id: "mock-call-8", title: "Gulmohar Lane revival: ensemble (6)", company: "Aranya Theatre Collective", postedById: "vikram-sethi", medium: "Theatre", location: "Mumbai", compensation: "Per show + stipend", deadline: "Nov 5", deadlineISO: "2026-11-05", tags: ["Theatre", "Open audition"], applicants: 187, postedAgo: "6d", tone: "dusk", roles: 6 },
 ];
+
+/** the extra call sheet fields a casting detail page needs */
+export interface MockCallDetail {
+  shootDates: string;
+  description: string;
+  requiresAudition: boolean;
+  lookingFor: Array<{ name: string; brief: string }>;
+  requirements: string[];
+}
+
+export const MOCK_CALL_DETAILS: Record<string, MockCallDetail> = {
+  "mock-call-1": {
+    shootDates: "Dec 1 to Mar 15", requiresAudition: true,
+    description: "Season three goes back to the fishing village. We need four faces who feel like they've lived there their whole lives. Konkani is a big plus. Small parts that come back every episode.",
+    lookingFor: [
+      { name: "Bosco, 50s", brief: "Owns the boat. Says very little, notices everything." },
+      { name: "Rita, 30s", brief: "Runs the fish stall. Loud, warm, funny, nobody's fool." },
+      { name: "Twins, 19", brief: "Real siblings preferred. Restless, want out of the village." },
+    ],
+    requirements: ["Self tape of scene 7 (sides in your inbox after you apply)", "Slate with name, height and city", "Recent unfiltered photos"],
+  },
+  "mock-call-2": {
+    shootDates: "Jan 6 to Feb 17", requiresAudition: true,
+    description: "Nalini is a chess coach in a small Konkan town who gets pulled into a tournament she swore off. It's a quiet film. We want someone who can hold the frame without saying much.",
+    lookingFor: [
+      { name: "Nalini, 28 to 38", brief: "Lead. Sharp, private, funny when she lets herself be." },
+      { name: "Aai, 60s", brief: "Her mother. Two scenes, both big ones." },
+    ],
+    requirements: ["Self tape of the kitchen scene", "Showreel link if you have one", "Marathi or Konkani is a plus"],
+  },
+  "mock-call-3": {
+    shootDates: "Oct 21 to 22", requiresAudition: false,
+    description: "Two day shoot for a skincare brand. Natural, no heavy makeup looks. Close ups, so we'll be looking at skin texture and how you hold a look.",
+    lookingFor: [{ name: "Two faces, 25 to 35", brief: "Any gender. Comfortable with very close camera." }],
+    requirements: ["Three clean photos, no filters", "Your usage fee expectations"],
+  },
+  "mock-call-4": {
+    shootDates: "Oct 26 to 27", requiresAudition: true,
+    description: "Flooded warehouse, ankle deep water, one long take. We want dancers who stay grounded and don't panic when the floor is wet.",
+    lookingFor: [
+      { name: "Dancers (8)", brief: "Contemporary and street. Strong floor work." },
+      { name: "Assistant choreographer", brief: "Has run rehearsals for a music video before." },
+    ],
+    requirements: ["60 second movement tape", "Say if you're fine working in water"],
+  },
+  "mock-call-5": {
+    shootDates: "Nov 20 onwards", requiresAudition: true,
+    description: "The reboot needs a villain people love to hate. Daily soap pace, so you need to learn lines fast and stay consistent across months.",
+    lookingFor: [{ name: "Raghav, 35 to 50", brief: "Smooth, charming, dangerous. Never raises his voice." }],
+    requirements: ["Self tape of the confrontation scene", "Past TV credits"],
+  },
+  "mock-call-6": {
+    shootDates: "Nov 8 to 15", requiresAudition: false,
+    description: "Festival short, mostly night exteriors in old Mumbai. Small crew, one light van. We want a DoP who loves available light and moves fast.",
+    lookingFor: [{ name: "Director of Photography", brief: "Owns or can arrange a cinema camera package." }],
+    requirements: ["Link to your reel", "Two frames you're proud of", "Day rate"],
+  },
+  "mock-call-7": {
+    shootDates: "Recording in December", requiresAudition: true,
+    description: "Animated sequel. Recording from home is fine if you have a clean setup. Kids and adults both watch this one, so range matters.",
+    lookingFor: [
+      { name: "Kite, any age", brief: "The hero. Bright, cheeky, a bit too brave." },
+      { name: "Old Crow", brief: "Grumpy narrator. Deep voice, dry humour." },
+      { name: "Twins", brief: "Two voices from one actor. Fast switching." },
+    ],
+    requirements: ["Voice sample, 30 to 60 seconds", "Your mic setup"],
+  },
+  "mock-call-8": {
+    shootDates: "Rehearsals from Nov 15", requiresAudition: true,
+    description: "Revival of the Gulmohar Lane play with a new cast. Six weeks of rehearsal, then a run across Mumbai venues. Theatre folks, this one's yours.",
+    lookingFor: [{ name: "Ensemble (6)", brief: "Comfortable singing a little and doubling up roles." }],
+    requirements: ["Open audition at Prithvi, Nov 8", "Or a self tape of the monologue"],
+  },
+};
 
 // ───────── spotlight / stories rail ─────────
 
@@ -224,7 +301,7 @@ export const MOCK_REELS: Reel[] = [
     id: "reel-2", kind: "casting", badge: "CASTING", title: "Saltwater S3 is casting 4 roles",
     caption: "Goa. August. Konkani speakers, this one's yours. Tape scene 7 and slate your height 🌊 #nowcasting",
     creatorId: "ritika-nair", audio: "Saltwater — Main Titles · Nikhil Bhandari", likes: 8932, comments: 1204, shares: 902,
-    palette: ["#04162b", "#0e4c7a", "#3ddc97"], clip: "sintel-snow", prop: "🌊", subtitle: "4 recurring roles · closes Jul 20",
+    palette: ["#04162b", "#0e4c7a", "#3ddc97"], clip: "sintel-snow", prop: "🌊", subtitle: "4 recurring roles · closes Oct 20",
     cta: { label: "Apply now", href: "/casting" },
   },
   {
